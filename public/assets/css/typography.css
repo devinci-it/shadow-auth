@@ -1,0 +1,211 @@
+/* =========================================================
+   RESPONSIVE TYPOGRAPHY SYSTEM
+   ---------------------------------------------------------
+   - Fluid type using clamp()
+   - Modular scale
+   - CSS custom properties
+   - Commented @font-face
+   ========================================================= */
+
+
+/* =========================================================
+   FONT FACE DECLARATIONS
+   ========================================================= */
+
+/*
+  Headline Display Font
+  ---------------------------------------------------------
+  - Used for headings and accent text
+  - Optimized with font-display: swap for performance
+*/
+@font-face {
+  font-family: "Headline";
+  src: url("/assets/fonts/hello-headline.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+  Optional: Add more weights if needed
+  Example:
+
+  @font-face {
+    font-family: "Headline";
+    src: url("/assets/fonts/hello-headline-bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+*/
+
+
+/* =========================================================
+   ROOT VARIABLES (DESIGN SYSTEM)
+   ========================================================= */
+
+:root {
+
+  /* -----------------------------------------------------
+     Font Families
+  ----------------------------------------------------- */
+  --font-display: "Hubot Sans", sans-serif;
+  --font-body: "Hubot Sans", cursive, system-ui;
+
+  /* -----------------------------------------------------
+     Fluid Base Font Size
+     Scales between 15px → 18px depending on viewport
+  ----------------------------------------------------- */
+  --text-base: clamp(15px, 1vw + 0.5rem, 16px);
+
+  /* Modular Scale Ratio */
+  --scale-ratio: 1.15;
+
+  /* -----------------------------------------------------
+     Fluid Type Scale (calculated from base)
+  ----------------------------------------------------- */
+  --text-xs: calc(var(--text-base) / var(--scale-ratio));
+  --text-sm: calc(var(--text-base) * 0.875);
+  --text-md: var(--text-base);
+  --text-lg: calc(var(--text-base) * var(--scale-ratio));
+  --text-xl: calc(var(--text-lg) * var(--scale-ratio));
+  --text-2xl: calc(var(--text-xl) * var(--scale-ratio));
+  --text-3xl: calc(var(--text-2xl) * var(--scale-ratio));
+  --text-4xl: calc(var(--text-3xl) * var(--scale-ratio));
+
+  /* -----------------------------------------------------
+     Line Heights
+  ----------------------------------------------------- */
+  --lh-tight: 1.2;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.7;
+
+  /* -----------------------------------------------------
+     Letter Spacing
+  ----------------------------------------------------- */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.05em;
+
+  /* -----------------------------------------------------
+     Spacing Rhythm (Optional)
+  ----------------------------------------------------- */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+}
+
+
+/* =========================================================
+   GLOBAL BODY
+   ========================================================= */
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: var(--lh-tight);
+  margin: 0 0 var(--space-md);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  letter-spacing: var(--tracking-tight);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+}
+
+h4 {
+  font-size: var(--text-xl);
+}
+
+h5 {
+  font-size: var(--text-lg);
+}
+
+h6 {
+  font-size: var(--text-md);
+}
+
+
+/* =========================================================
+   BODY TEXT
+   ========================================================= */
+
+p {
+  font-size: var(--text-md);
+  line-height: var(--lh-relaxed);
+  margin-bottom: var(--space-md);
+}
+
+small {
+  font-size: var(--text-sm);
+}
+
+.caption {
+  font-size: var(--text-sm);
+  color: #666;
+}
+
+
+/* =========================================================
+   UTILITY CLASSES
+   ========================================================= */
+
+.text-xs  { font-size: var(--text-xs); }
+.text-sm  { font-size: var(--text-sm); }
+.text-md  { font-size: var(--text-md); }
+.text-lg  { font-size: var(--text-lg); }
+.text-xl  { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+.text-3xl { font-size: var(--text-3xl); }
+.text-4xl { font-size: var(--text-4xl); }
+
+.text-tight   { line-height: var(--lh-tight); }
+.text-normal  { line-height: var(--lh-normal); }
+.text-relaxed { line-height: var(--lh-relaxed); }
+
+.tracking-tight  { letter-spacing: var(--tracking-tight); }
+.tracking-wide   { letter-spacing: var(--tracking-wide); }
+
+
+/* =========================================================
+   OPTIONAL: MOBILE TUNING
+   (Usually clamp() handles scaling already)
+   ========================================================= */
+
+@media (max-width: 480px) {
+  :root {
+    --scale-ratio: 1.18; /* Slightly reduce scale on very small screens */
+  }
+}
+
+
+/* =========================================================
+   OPTIONAL: LARGE SCREEN ENHANCEMENT
+   ========================================================= */
+
+@media (min-width: 1600px) {
+  :root {
+    --text-base: 19px;
+  }
+}

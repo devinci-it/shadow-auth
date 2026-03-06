@@ -1,0 +1,90 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$autoloadCandidates = [
+    $_composer_autoload_path ?? null,
+    __DIR__ . '/../../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+];
+
+$autoloadPath = null;
+foreach ($autoloadCandidates as $candidate) {
+    if (is_string($candidate) && $candidate !== '' && is_file($candidate)) {
+        $autoloadPath = $candidate;
+        break;
+    }
+}
+
+if ($autoloadPath === null) {
+    fwrite(STDERR, "Could not locate Composer autoload file.\n");
+    exit(1);
+}
+
+require $autoloadPath;
+
+use Devinci\ShadowAuth\Publisher\Publisher;
+
+$args = $_SERVER['argv'] ?? [];
+array_shift($args);
+
+$force = in_array('--force', $args, true);
+$publishPublic = in_array('--public', $args, true);
+$publishEndpoints = in_array('--endpoints', $args, true);
+$publishWiki = in_array('--wiki', $args, true);
+$pathArg = null;
+
+foreach ($args as $arg) {
+    if ($arg === '--force' || $arg === '--wiki' || $arg === '--public' || $arg === '--endpoints') {
+        continue;
+    }
+
+    if ($pathArg === null) {
+        $pathArg = $arg;
+    }
+}
+
+if (in_array('--help', $args, true) || in_array('-h', $args, true)) {
+    fwrite(STDOUT, "Shadow Auth Demo Publisher\n\n");
+    fwrite(STDOUT, "Usage:\n");
+    fwrite(STDOUT, "  shadow-auth-publish-demo [project-root] [--public|--endpoints|--wiki] [--force]\n\n");
+    fwrite(STDOUT, "Examples:\n");
+    fwrite(STDOUT, "  shadow-auth-publish-demo\n");
+    fwrite(STDOUT, "  shadow-auth-publish-demo --public\n");
+    fwrite(STDOUT, "  shadow-auth-publish-demo --endpoints\n");
+    fwrite(STDOUT, "  shadow-auth-publish-demo --wiki\n");
+    fwrite(STDOUT, "  shadow-auth-publish-demo /var/www/app --force\n");
+    exit(0);
+}
+
+try {
+    $mode = 'demo';
+    if ($publishPublic) {
+        $mode = 'public';
+    }
+    if ($publishEndpoints) {
+        $mode = 'endpoints';
+    }
+    if ($publishWiki) {
+        $mode = 'wiki';
+    }
+
+    $result = match ($mode) {
+        'public' => Publisher::publishPublic($pathArg, $force),
+        'endpoints' => Publisher::publishEndpoints($pathArg, $force),
+        'wiki' => Publisher::publishWiki($pathArg, $force),
+        default => Publisher::publishDemo($pathArg, $force),
+    };
+
+    fwrite(STDOUT, "Published " . ($result['variant'] ?? $mode) . " to: " . $result['target_root'] . "\n");
+    fwrite(STDOUT, "Copied files: " . count($result['copied']) . "\n");
+    fwrite(STDOUT, "Skipped files: " . count($result['skipped']) . "\n");
+
+    if (count($result['skipped']) > 0) {
+        fwrite(STDOUT, "Use --force to overwrite existing files.\n");
+    }
+} catch (Throwable $exception) {
+    fwrite(STDERR, "Publish failed: " . $exception->getMessage() . "\n");
+    exit(1);
+}

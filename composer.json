@@ -1,0 +1,24 @@
+{
+  "name": "devinci/shadow-auth",
+  "description": "Lightweight file-based PHP authentication library with optional TOTP.",
+  "type": "library",
+  "license": "MIT",
+  "bin": [
+    "bin/shadow-auth-publish-demo"
+  ],
+  "require": {
+    "php": ">=8.1"
+  },
+  "scripts": {
+    "publish-demo": "@php vendor/bin/shadow-auth-publish-demo",
+    "publish-demo-force": "@php vendor/bin/shadow-auth-publish-demo --force",
+    "publish-endpoints": "@php vendor/bin/shadow-auth-publish-demo --endpoints",
+    "publish-endpoints-force": "@php vendor/bin/shadow-auth-publish-demo --endpoints --force"
+  },
+  "autoload": {
+    "psr-4": {
+      "Devinci\\ShadowAuth\\": "src/",
+      "Shadow\\": "src/Shadow/"
+    }
+  }
+}

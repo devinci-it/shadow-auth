@@ -50,6 +50,7 @@ final class Publisher
             $packageRoot . '/bootstrap.php' => $targetRoot . '/bootstrap.php',
             $packageRoot . '/public' => $targetRoot . '/public',
             $packageRoot . '/views' => $targetRoot . '/views',
+            $packageRoot . '/assets/templates/demo.composer.json' => $targetRoot . '/composer.json',
         ];
 
         $copied = [];

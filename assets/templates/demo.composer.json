@@ -1,0 +1,17 @@
+{
+    "name": "devinci/shadow-auth-demo",
+    "description": "Isolated demo scaffold for devinci/shadow-auth",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "devinci/shadow-auth": "^0.0.1"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/devinci-it/shadow-auth"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

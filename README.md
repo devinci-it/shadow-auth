@@ -113,9 +113,17 @@ After installing in a Composer project, publish an isolated ready-to-run demo sc
 
 This creates a self-contained folder:
 
+- `shadow-auth-demo/composer.json`
 - `shadow-auth-demo/bootstrap.php`
 - `shadow-auth-demo/public/*`
 - `shadow-auth-demo/views/*`
+
+Install demo dependencies inside the published demo folder:
+
+```bash
+cd shadow-auth-demo
+composer install
+```
 
 To overwrite existing published files:
 

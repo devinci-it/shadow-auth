@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\View;
+namespace DevinciIT\ShadowAuth\View;
 
 final class ForgotPasswordForm extends BaseForm
 {

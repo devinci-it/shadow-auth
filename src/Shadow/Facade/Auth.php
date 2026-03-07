@@ -10,12 +10,12 @@ final class Auth
 {
     public static function requireAuth(string $redirectTo = '/views/login.php'): void
     {
-        \Devinci\ShadowAuth\Facade\Auth::requireAuth($redirectTo);
+        \DevinciIT\ShadowAuth\Facade\Auth::requireAuth($redirectTo);
     }
 
     public static function __callStatic(string $name, array $arguments): mixed
     {
-        $target = [\Devinci\ShadowAuth\Facade\Auth::class, $name];
+        $target = [\DevinciIT\ShadowAuth\Facade\Auth::class, $name];
 
         if (!is_callable($target)) {
             throw new BadMethodCallException(sprintf('Method %s::%s does not exist.', self::class, $name));

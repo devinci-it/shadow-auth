@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Facade;
+namespace DevinciIT\ShadowAuth\Facade;
 
-use Devinci\ShadowAuth\Core\AuthManager;
-use Devinci\ShadowAuth\Core\Config;
-use Devinci\ShadowAuth\Core\PasswordResetManager;
-use Devinci\ShadowAuth\Core\RegistrationConstraintPolicy;
-use Devinci\ShadowAuth\Core\RegistrationManager;
-use Devinci\ShadowAuth\Providers\FileUserProvider;
-use Devinci\ShadowAuth\Services\TwoFactorService;
+use DevinciIT\ShadowAuth\Core\AuthManager;
+use DevinciIT\ShadowAuth\Core\Config;
+use DevinciIT\ShadowAuth\Core\PasswordResetManager;
+use DevinciIT\ShadowAuth\Core\RegistrationConstraintPolicy;
+use DevinciIT\ShadowAuth\Core\RegistrationManager;
+use DevinciIT\ShadowAuth\Providers\FileUserProvider;
+use DevinciIT\ShadowAuth\Services\TwoFactorService;
 
 final class Auth
 {

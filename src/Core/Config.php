@@ -1,6 +1,6 @@
 <?php
 
-namespace Devinci\ShadowAuth\Core;
+namespace DevinciIT\ShadowAuth\Core;
 
 class Config
 {

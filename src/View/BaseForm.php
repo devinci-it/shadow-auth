@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\View;
+namespace DevinciIT\ShadowAuth\View;
 
-use Devinci\ShadowAuth\Utils\CSRF;
+use DevinciIT\ShadowAuth\Utils\CSRF;
 
 abstract class BaseForm
 {

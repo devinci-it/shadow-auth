@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Services;
+namespace DevinciIT\ShadowAuth\Services;
 
 final class TwoFactorService
 {

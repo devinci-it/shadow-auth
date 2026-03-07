@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use Devinci\ShadowAuth\Core\Config;
-use Devinci\ShadowAuth\Providers\FileUserProvider;
-use Devinci\ShadowAuth\Utils\CSRF;
+use DevinciIT\ShadowAuth\Core\Config;
+use DevinciIT\ShadowAuth\Providers\FileUserProvider;
+use DevinciIT\ShadowAuth\Utils\CSRF;
 
 define('SHADOW_AUTH_PUBLIC_MODE', true);
 
@@ -98,11 +98,11 @@ if ($page === 'home') {
         ],
     ];
 
-    $loginFormPreview = (new Devinci\ShadowAuth\View\LoginForm())->render();
-    $forgotPasswordFormPreview = (new Devinci\ShadowAuth\View\ForgotPasswordForm())->render();
-    $resetPasswordFormPreview = (new Devinci\ShadowAuth\View\ResetPasswordForm())->setToken('demo-token-placeholder')->render();
-    $registerFormPreview = (new Devinci\ShadowAuth\View\RegisterForm())->setExtraFields($registerExtraFields)->render();
-    $totpFormPreview = (new Devinci\ShadowAuth\View\TotpForm())->render();
+    $loginFormPreview = (new DevinciIT\ShadowAuth\View\LoginForm())->render();
+    $forgotPasswordFormPreview = (new DevinciIT\ShadowAuth\View\ForgotPasswordForm())->render();
+    $resetPasswordFormPreview = (new DevinciIT\ShadowAuth\View\ResetPasswordForm())->setToken('demo-token-placeholder')->render();
+    $registerFormPreview = (new DevinciIT\ShadowAuth\View\RegisterForm())->setExtraFields($registerExtraFields)->render();
+    $totpFormPreview = (new DevinciIT\ShadowAuth\View\TotpForm())->render();
 
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && (($_POST['action'] ?? '') === 'seed_demo_users')) {
         if (!CSRF::validate($_POST['csrf_token'] ?? null)) {

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use Devinci\ShadowAuth\Core\Config;
-use Devinci\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Core\Config;
+use DevinciIT\ShadowAuth\Facade\Auth;
 
 if (!defined('SHADOW_AUTH_BOOTSTRAPPED')) {
     define('SHADOW_AUTH_BOOTSTRAPPED', true);

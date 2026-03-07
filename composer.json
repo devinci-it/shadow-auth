@@ -1,5 +1,5 @@
 {
-  "name": "devinci/shadow-auth",
+  "name": "devinci-it/shadow-auth",
   "description": "Lightweight file-based PHP authentication library with optional TOTP.",
   "type": "library",
   "license": "MIT",
@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Devinci\\ShadowAuth\\": "src/",
+      "DevinciIT\\ShadowAuth\\": "src/",
       "Shadow\\": "src/Shadow/"
     }
   }

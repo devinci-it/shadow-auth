@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Publisher;
+namespace DevinciIT\ShadowAuth\Publisher;
 
 use RuntimeException;
 

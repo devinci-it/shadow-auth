@@ -7,18 +7,18 @@ A lightweight, file-based PHP authentication library focused on secure defaults 
 All library classes use:
 
 ```php
-namespace Devinci\ShadowAuth;
+namespace DevinciIT\ShadowAuth;
 ```
 
 Sub-namespaces follow the same root, for example:
 
-- `Devinci\ShadowAuth\Core`
-- `Devinci\ShadowAuth\Facade`
-- `Devinci\ShadowAuth\Providers`
-- `Devinci\ShadowAuth\Processors`
-- `Devinci\ShadowAuth\Services`
-- `Devinci\ShadowAuth\Utils`
-- `Devinci\ShadowAuth\View`
+- `DevinciIT\ShadowAuth\Core`
+- `DevinciIT\ShadowAuth\Facade`
+- `DevinciIT\ShadowAuth\Providers`
+- `DevinciIT\ShadowAuth\Processors`
+- `DevinciIT\ShadowAuth\Services`
+- `DevinciIT\ShadowAuth\Utils`
+- `DevinciIT\ShadowAuth\View`
 
 ## Features
 
@@ -71,7 +71,7 @@ shadow-auth/
 If using Composer in your app:
 
 ```bash
-composer require devinci/shadow-auth
+composer require devinci-it/shadow-auth
 ```
 
 If this package is local/private, add it as a path repository in your app `composer.json`.
@@ -92,7 +92,7 @@ In your consuming app, point Composer to this package folder:
         }
     ],
     "require": {
-        "devinci/shadow-auth": "*"
+        "devinci-it/shadow-auth": "*"
     }
 }
 ```
@@ -100,7 +100,7 @@ In your consuming app, point Composer to this package folder:
 Then run:
 
 ```bash
-composer update devinci/shadow-auth
+composer update devinci-it/shadow-auth
 ```
 
 ## Publish Demo Scaffold
@@ -223,8 +223,8 @@ declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Devinci\ShadowAuth\Core\Config;
-use Devinci\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Core\Config;
+use DevinciIT\ShadowAuth\Facade\Auth;
 
 Config::set([
         'storage_path' => __DIR__ . '/storage/shadow.php',
@@ -258,7 +258,7 @@ If a constraint fails, registration now returns a field-specific message like `E
 ### 2) Register User
 
 ```php
-use Devinci\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Facade\Auth;
 
 $ok = Auth::register('alice', 'secure-password');
 ```
@@ -266,7 +266,7 @@ $ok = Auth::register('alice', 'secure-password');
 ### 3) Login User (single-call)
 
 ```php
-use Devinci\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Facade\Auth;
 
 $ok = Auth::attempt('alice', 'secure-password');
 ```
@@ -274,7 +274,7 @@ $ok = Auth::attempt('alice', 'secure-password');
 ### 4) Login User (processor two-step with required TOTP)
 
 ```php
-use Devinci\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Facade\Auth;
 
 $result = Auth::beginLogin('alice', 'secure-password');
 
@@ -286,7 +286,7 @@ if ($result === 'totp_required') {
 ### 5) Check Session / Logout
 
 ```php
-use Devinci\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Facade\Auth;
 
 if (Auth::check()) {
         $user = Auth::user();
@@ -301,9 +301,9 @@ Auth::logout();
 <?php
 require __DIR__ . '/../bootstrap.php';
 
-use Devinci\ShadowAuth\Processors\LoginProcessor;
-use Devinci\ShadowAuth\View\Forms;
-use Devinci\ShadowAuth\Core\Flash;
+use DevinciIT\ShadowAuth\Processors\LoginProcessor;
+use DevinciIT\ShadowAuth\View\Forms;
+use DevinciIT\ShadowAuth\Core\Flash;
 
 $processor = new LoginProcessor();
 $processor->handle();

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 require dirname(__DIR__) . '/bootstrap.php';
 
-use Devinci\ShadowAuth\Core\Config;
-use Devinci\ShadowAuth\Providers\FileUserProvider;
-use Devinci\ShadowAuth\Utils\CSRF;
+use DevinciIT\ShadowAuth\Core\Config;
+use DevinciIT\ShadowAuth\Providers\FileUserProvider;
+use DevinciIT\ShadowAuth\Utils\CSRF;
 
 $isPublicMode = defined('SHADOW_AUTH_PUBLIC_MODE') && SHADOW_AUTH_PUBLIC_MODE;
 $overviewUrl = $isPublicMode ? shadow_auth_public_url('overview') : '/views/overview.php';

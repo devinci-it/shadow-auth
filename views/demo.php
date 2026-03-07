@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 require dirname(__DIR__) . '/bootstrap.php';
 
-use Devinci\ShadowAuth\Core\Config;
-use Devinci\ShadowAuth\Providers\FileUserProvider;
-use Devinci\ShadowAuth\Utils\CSRF;
+use DevinciIT\ShadowAuth\Core\Config;
+use DevinciIT\ShadowAuth\Providers\FileUserProvider;
+use DevinciIT\ShadowAuth\Utils\CSRF;
 
 $isPublicMode = defined('SHADOW_AUTH_PUBLIC_MODE') && SHADOW_AUTH_PUBLIC_MODE;
 $loginUrl = $isPublicMode ? shadow_auth_public_url('login') : '/views/login.php';
@@ -155,26 +155,26 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 <h3>Login Form</h3>
 <p><strong>Required fields</strong>: <code>username</code>, <code>password</code>, <code>csrf_token</code></p>
 <ul>
-    <li>Form fields implemented in <code>Devinci\ShadowAuth\View\LoginForm</code>.</li>
-    <li>POST processing implemented in <code>Devinci\ShadowAuth\Processors\LoginProcessor</code>.</li>
-    <li>Auth logic implemented in <code>Devinci\ShadowAuth\Facade\Auth::beginLogin()</code>.</li>
+    <li>Form fields implemented in <code>DevinciIT\ShadowAuth\View\LoginForm</code>.</li>
+    <li>POST processing implemented in <code>DevinciIT\ShadowAuth\Processors\LoginProcessor</code>.</li>
+    <li>Auth logic implemented in <code>DevinciIT\ShadowAuth\Facade\Auth::beginLogin()</code>.</li>
 </ul>
 
 <h3>Register Form</h3>
 <p><strong>Required fields</strong>: <code>username</code>, <code>password</code>, <code>confirm_password</code>, <code>csrf_token</code></p>
 <p><strong>Optional extra fields</strong>: declared in the page (example: <code>email</code>) and passed to both the form and processor.</p>
 <ul>
-    <li>Form fields implemented in <code>Devinci\ShadowAuth\View\RegisterForm</code> via <code>setExtraFields()</code>.</li>
-    <li>POST processing and validation implemented in <code>Devinci\ShadowAuth\Processors\RegisterProcessor</code>.</li>
-    <li>Persistence implemented in <code>Devinci\ShadowAuth\Facade\Auth::registerWithData()</code>.</li>
+    <li>Form fields implemented in <code>DevinciIT\ShadowAuth\View\RegisterForm</code> via <code>setExtraFields()</code>.</li>
+    <li>POST processing and validation implemented in <code>DevinciIT\ShadowAuth\Processors\RegisterProcessor</code>.</li>
+    <li>Persistence implemented in <code>DevinciIT\ShadowAuth\Facade\Auth::registerWithData()</code>.</li>
 </ul>
 
 <h3>2FA Verify Form</h3>
 <p><strong>Required fields</strong>: <code>totp_code</code>, <code>csrf_token</code></p>
 <ul>
-    <li>Form fields implemented in <code>Devinci\ShadowAuth\View\TotpForm</code>.</li>
-    <li>POST processing implemented in <code>Devinci\ShadowAuth\Processors\TOTPProcessor</code>.</li>
-    <li>Verification implemented in <code>Devinci\ShadowAuth\Facade\Auth::verifyPendingTotp()</code>.</li>
+    <li>Form fields implemented in <code>DevinciIT\ShadowAuth\View\TotpForm</code>.</li>
+    <li>POST processing implemented in <code>DevinciIT\ShadowAuth\Processors\TOTPProcessor</code>.</li>
+    <li>Verification implemented in <code>DevinciIT\ShadowAuth\Facade\Auth::verifyPendingTotp()</code>.</li>
 </ul>
 
 <h2>Exact Files & Code by Page</h2>

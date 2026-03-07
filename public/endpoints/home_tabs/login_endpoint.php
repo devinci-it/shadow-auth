@@ -49,9 +49,9 @@ PHP;
 <h3>Required Fields</h3>
 <p><strong>Required fields:</strong> username, password, csrf_token</p>
 <ul>
-    <li>Form class: <code>Devinci\ShadowAuth\View\LoginForm</code></li>
-    <li>POST processor: <code>Devinci\ShadowAuth\Processors\LoginProcessor</code></li>
-    <li>Auth logic: <code>Devinci\ShadowAuth\Facade\Auth::beginLogin()</code></li>
+    <li>Form class: <code>DevinciIT\ShadowAuth\View\LoginForm</code></li>
+    <li>POST processor: <code>DevinciIT\ShadowAuth\Processors\LoginProcessor</code></li>
+    <li>Auth logic: <code>DevinciIT\ShadowAuth\Facade\Auth::beginLogin()</code></li>
 </ul>
 </section>
 

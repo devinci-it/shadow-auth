@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 require dirname(__DIR__) . '/bootstrap.php';
 
-use Devinci\ShadowAuth\Core\Config;
-use Devinci\ShadowAuth\Core\Flash;
-use Devinci\ShadowAuth\Facade\Auth;
-use Devinci\ShadowAuth\Processors\TOTPProcessor;
-use Devinci\ShadowAuth\Providers\FileUserProvider;
-use Devinci\ShadowAuth\Utils\CSRF;
-use Devinci\ShadowAuth\View\TotpForm;
+use DevinciIT\ShadowAuth\Core\Config;
+use DevinciIT\ShadowAuth\Core\Flash;
+use DevinciIT\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Processors\TOTPProcessor;
+use DevinciIT\ShadowAuth\Providers\FileUserProvider;
+use DevinciIT\ShadowAuth\Utils\CSRF;
+use DevinciIT\ShadowAuth\View\TotpForm;
 
 $isPublicMode = defined('SHADOW_AUTH_PUBLIC_MODE') && SHADOW_AUTH_PUBLIC_MODE;
 $dashboardUrl = $isPublicMode ? shadow_auth_public_url('dashboard') : '/views/dashboard.php';

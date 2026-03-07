@@ -50,9 +50,9 @@ PHP;
 <p><strong>Required fields:</strong> username, password, confirm_password, csrf_token</p>
 <p><strong>Optional extra fields:</strong> via <code>setExtraFields()</code></p>
 <ul>
-    <li>Form class: <code>Devinci\ShadowAuth\View\RegisterForm</code></li>
-    <li>POST processor: <code>Devinci\ShadowAuth\Processors\RegisterProcessor</code></li>
-    <li>Persistence: <code>Devinci\ShadowAuth\Facade\Auth::registerWithData()</code></li>
+    <li>Form class: <code>DevinciIT\ShadowAuth\View\RegisterForm</code></li>
+    <li>POST processor: <code>DevinciIT\ShadowAuth\Processors\RegisterProcessor</code></li>
+    <li>Persistence: <code>DevinciIT\ShadowAuth\Facade\Auth::registerWithData()</code></li>
 </ul>
 </section>
 

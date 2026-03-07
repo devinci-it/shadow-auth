@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 require dirname(__DIR__) . '/bootstrap.php';
 
-use Devinci\ShadowAuth\Core\Flash;
-use Devinci\ShadowAuth\Processors\ForgotPasswordProcessor;
-use Devinci\ShadowAuth\View\ForgotPasswordForm;
+use DevinciIT\ShadowAuth\Core\Flash;
+use DevinciIT\ShadowAuth\Processors\ForgotPasswordProcessor;
+use DevinciIT\ShadowAuth\View\ForgotPasswordForm;
 
 $isPublicMode = defined('SHADOW_AUTH_PUBLIC_MODE') && SHADOW_AUTH_PUBLIC_MODE;
 $loginUrl = $isPublicMode ? shadow_auth_public_url('login') : '/views/login.php';

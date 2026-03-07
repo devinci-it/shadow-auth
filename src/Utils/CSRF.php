@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Utils;
+namespace DevinciIT\ShadowAuth\Utils;
 
 final class CSRF
 {

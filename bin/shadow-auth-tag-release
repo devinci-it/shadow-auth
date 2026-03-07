@@ -14,6 +14,11 @@ declare(strict_types=1);
 $args = $_SERVER['argv'] ?? [];
 array_shift($args);
 
+// Prevent noisy trace output from corrupting command-result checks.
+putenv('GIT_TRACE');
+putenv('GIT_TRACE_PACKET');
+putenv('GIT_CURL_VERBOSE');
+
 if (in_array('--help', $args, true) || in_array('-h', $args, true) || count($args) === 0) {
     fwrite(STDOUT, "Shadow Auth Tag Release\n\n");
     fwrite(STDOUT, "Usage:\n");

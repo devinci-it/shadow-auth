@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Core;
+namespace DevinciIT\ShadowAuth\Core;
 
-use Devinci\ShadowAuth\Publisher\Publisher as NamespacePublisher;
+use DevinciIT\ShadowAuth\Publisher\Publisher as NamespacePublisher;
 
 final class Publisher
 {

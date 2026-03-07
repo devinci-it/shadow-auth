@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Processors;
+namespace DevinciIT\ShadowAuth\Processors;
 
 abstract class BaseProcessor
 {

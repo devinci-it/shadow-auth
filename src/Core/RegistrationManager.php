@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Core;
+namespace DevinciIT\ShadowAuth\Core;
 
-use Devinci\ShadowAuth\Providers\FileUserProvider;
+use DevinciIT\ShadowAuth\Providers\FileUserProvider;
 
 final class RegistrationManager
 {

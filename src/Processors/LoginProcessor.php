@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Devinci\ShadowAuth\Processors;
+namespace DevinciIT\ShadowAuth\Processors;
 
-use Devinci\ShadowAuth\Core\Flash;
-use Devinci\ShadowAuth\Facade\Auth;
-use Devinci\ShadowAuth\Utils\CSRF;
+use DevinciIT\ShadowAuth\Core\Flash;
+use DevinciIT\ShadowAuth\Facade\Auth;
+use DevinciIT\ShadowAuth\Utils\CSRF;
 
 final class LoginProcessor extends BaseProcessor
 {

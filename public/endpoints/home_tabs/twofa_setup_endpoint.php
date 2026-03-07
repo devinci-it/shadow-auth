@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 //CSRF import for token generation and validation in the form
-use Devinci\ShadowAuth\Utils\CSRF;
+use DevinciIT\ShadowAuth\Utils\CSRF;
 
 ?>
 <article class="tab-page">
@@ -75,8 +75,8 @@ PHP;
 <p><strong>Generate step:</strong> csrf_token, action=generate</p>
 <p><strong>Confirm step:</strong> totp_code, csrf_token, action=confirm</p>
 <ul>
-    <li>Setup methods: <code>Devinci\ShadowAuth\Facade\Auth::setupTotpSecret()</code> and <code>Devinci\ShadowAuth\Facade\Auth::confirmTotp()</code></li>
-    <li>Backend methods: <code>Devinci\ShadowAuth\Core\AuthManager::setupTotpSecret()</code> and <code>enableTotpForUser()</code></li>
+    <li>Setup methods: <code>DevinciIT\ShadowAuth\Facade\Auth::setupTotpSecret()</code> and <code>DevinciIT\ShadowAuth\Facade\Auth::confirmTotp()</code></li>
+    <li>Backend methods: <code>DevinciIT\ShadowAuth\Core\AuthManager::setupTotpSecret()</code> and <code>enableTotpForUser()</code></li>
 </ul>
 </section>
 

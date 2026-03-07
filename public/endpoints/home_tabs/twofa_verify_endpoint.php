@@ -54,9 +54,9 @@ PHP;
 <h3>Required Fields</h3>
 <p><strong>Required fields:</strong> totp_code, csrf_token</p>
 <ul>
-    <li>Form class: <code>Devinci\ShadowAuth\View\TotpForm</code></li>
-    <li>POST processor: <code>Devinci\ShadowAuth\Processors\TOTPProcessor</code></li>
-    <li>Verification: <code>Devinci\ShadowAuth\Facade\Auth::verifyPendingTotp()</code></li>
+    <li>Form class: <code>DevinciIT\ShadowAuth\View\TotpForm</code></li>
+    <li>POST processor: <code>DevinciIT\ShadowAuth\Processors\TOTPProcessor</code></li>
+    <li>Verification: <code>DevinciIT\ShadowAuth\Facade\Auth::verifyPendingTotp()</code></li>
 </ul>
 </section>
 

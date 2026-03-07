@@ -1,10 +1,10 @@
 {
-    "name": "devinci/shadow-auth-demo",
-    "description": "Isolated demo scaffold for devinci/shadow-auth",
+    "name": "devinci-it/shadow-auth-demo",
+    "description": "Isolated demo scaffold for devinci-it/shadow-auth",
     "type": "project",
     "require": {
         "php": ">=8.1",
-        "devinci/shadow-auth": ">=0.0.1 <0.1.0"
+        "devinci-it/shadow-auth": ">=0.0.1 <0.1.0"
     },
     "repositories": [
         {

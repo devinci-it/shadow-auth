@@ -35,16 +35,26 @@ $tabIcon = static function (string $tab): string {
     <link rel="stylesheet" href="/assets/css/styles.css">
     <!-- Link HubotSans -->
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hubot+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <!-- favicon -->
+     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <title>Shadow Auth Demo</title>
+    <script>
+        // Debug: Log Loaded
+        console.log('home_header.php loaded');
+    </script>
     <script src="/assets/js/index.js" defer></script>
 </head>
 <body>
 <header class="wiki-header">
-    <h1 class="wiki-title"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Shadow Auth Wiki Demo</h1>
+    <div class="header-logo">
+    <img src="/assets/logo.svg" alt="Shadow Auth Logo" width="200" height="200">
+    <h1 class="wiki-title"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Shadow Auth Wiki Demo</h1> </div>
+
     <p class="wiki-subtitle">Reference + runnable examples for login, registration, TOTP setup/verify, and protected routes.</p>
 </header>
 
 <nav class="shadow-tabs" aria-label="Home tabs">
+    
     <?php foreach ($homeTabs as $tab): ?>
         <?php
             $label = match ($tab) {
@@ -58,8 +68,11 @@ $tabIcon = static function (string $tab): string {
                 default => ucfirst($tab),
             };
         ?>
+
+    
         <a href="<?= htmlspecialchars(shadow_auth_public_url('home') . '&tab=' . $tab, ENT_QUOTES, 'UTF-8') ?>"<?= $active($tab) ?>><i class="<?= htmlspecialchars($tabIcon($tab), ENT_QUOTES, 'UTF-8') ?>" aria-hidden="true"></i> <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></a>
     <?php endforeach; ?>
+    
     <a href="<?= htmlspecialchars($logoutUrl, ENT_QUOTES, 'UTF-8') ?>"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Logout</a>
     <button id="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch to dark theme">
         <i class="fa-solid fa-moon" aria-hidden="true"></i>

@@ -1,6 +1,20 @@
-</main>
 <!-- Footer to print /echo the session id  -->
-<footer><p>Session ID: <?= session_id() ?></p></footer>
+<footer>
+    <hr>
+<div class="footer-content">
+    <div class="footer-logo">
+<svg width="115" viewBox="0 0 135 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.07781 8.07781V0H32.3112V8.07781H8.07781ZM24.2334 32.3112V24.2334H8.07781V16.1556H0V8.07781H8.07781V16.1556H24.2334V24.2334H32.3112V32.3112H24.2334ZM0 40.389V32.3112H24.2334V40.389H0Z" fill="#9999998f"/>
+<path d="M55.5753 8.07781V0H63.6531V8.07781H55.5753ZM47.4975 16.1556V8.07781H55.5753V16.1556H47.4975ZM55.5753 40.389V32.3112H47.4975V24.2334H39.4197V16.1556H47.4975V24.2334H55.5753V32.3112H63.6531V40.389H55.5753Z" fill="#99999987"/>
+<path d="M70.7616 40.389V8.07781H78.8394V0H94.995V8.07781H103.073V40.389H94.995V24.2334H78.8394V40.389H70.7616ZM78.8394 16.1556H94.995V8.40092H78.8394V16.1556Z" fill="#999999"/>
+</svg>
+    </div>
+        <p>&copy; <?= date('Y') ?> Shadow Auth Demo. All rights reserved.</p>
+
+    </main>
+
 </body>
+
+</footer>
 
 </html>

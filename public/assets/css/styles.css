@@ -468,3 +468,19 @@ footer > p {
     color: var(--fg-muted);
     margin-top: 20px;
 } 
+
+/* logo */
+
+.header-logo img {
+    width: 220px;
+    height: auto;
+}
+.header-logo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    align-items: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-around;
+}

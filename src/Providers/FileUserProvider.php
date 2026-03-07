@@ -50,6 +50,33 @@ final class FileUserProvider
         return null;
     }
 
+    public function findByField(string $field, mixed $value, bool $caseInsensitive = false): ?array
+    {
+        if ($field === '') {
+            return null;
+        }
+
+        $users = $this->all();
+
+        foreach ($users as $user) {
+            if (!is_array($user) || !array_key_exists($field, $user)) {
+                continue;
+            }
+
+            $current = $user[$field];
+            if ($this->fieldMatches($current, $value, $caseInsensitive)) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    public function existsByField(string $field, mixed $value, bool $caseInsensitive = false): bool
+    {
+        return $this->findByField($field, $value, $caseInsensitive) !== null;
+    }
+
     public function create(array $user): bool
     {
         $users = $this->all();
@@ -83,5 +110,14 @@ final class FileUserProvider
         }
 
         return $written;
+    }
+
+    private function fieldMatches(mixed $left, mixed $right, bool $caseInsensitive): bool
+    {
+        if ($caseInsensitive) {
+            return strtolower((string) $left) === strtolower((string) $right);
+        }
+
+        return (string) $left === (string) $right;
     }
 }

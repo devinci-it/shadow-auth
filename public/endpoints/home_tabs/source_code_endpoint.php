@@ -14,6 +14,7 @@ declare(strict_types=1);
         <a href="#source-bootstrap">Bootstrap</a>
         <a href="#source-facade">Facade/Auth</a>
         <a href="#source-manager">Core/AuthManager</a>
+        <a href="#source-password-reset">Core/PasswordResetManager</a>
         <a href="#source-processors">Processors</a>
         <a href="#source-views">View Forms</a>
     </aside>
@@ -40,6 +41,13 @@ declare(strict_types=1);
             <?= $renderSourcePanel('Core/AuthManager', 'src/Core/AuthManager.php') ?>
         </section>
 
+        <section id="source-password-reset" class="wiki-section">
+            <h3>src/Core/PasswordResetManager.php</h3>
+            <p><strong>Intent:</strong> manage reset token creation, validation, expiry, and password hash update.</p>
+            <p><strong>Key methods:</strong> <code>requestResetToken()</code>, <code>hasValidToken()</code>, <code>resetPasswordWithToken()</code>.</p>
+            <?= $renderSourcePanel('Core/PasswordResetManager', 'src/Core/PasswordResetManager.php') ?>
+        </section>
+
         <section id="source-processors" class="wiki-section">
             <h3>src/Processors/*</h3>
             <p><strong>Intent:</strong> request handling/validation layer for form submissions.</p>
@@ -47,10 +55,14 @@ declare(strict_types=1);
                 <li><code>LoginProcessor</code>: username/password -> auth branch.</li>
                 <li><code>RegisterProcessor</code>: validate + persist new user.</li>
                 <li><code>TOTPProcessor</code>: pending-login TOTP verification.</li>
+                <li><code>ForgotPasswordProcessor</code>: request and publish reset URL for demo flow.</li>
+                <li><code>ResetPasswordProcessor</code>: token + password confirmation reset handling.</li>
             </ul>
             <?= $renderSourcePanel('LoginProcessor', 'src/Processors/LoginProcessor.php') ?>
             <?= $renderSourcePanel('RegisterProcessor', 'src/Processors/RegisterProcessor.php') ?>
             <?= $renderSourcePanel('TOTPProcessor', 'src/Processors/TOTPProcessor.php') ?>
+            <?= $renderSourcePanel('ForgotPasswordProcessor', 'src/Processors/ForgotPasswordProcessor.php') ?>
+            <?= $renderSourcePanel('ResetPasswordProcessor', 'src/Processors/ResetPasswordProcessor.php') ?>
         </section>
 
         <section id="source-views" class="wiki-section">
@@ -60,6 +72,8 @@ declare(strict_types=1);
             <?= $renderSourcePanel('LoginForm', 'src/View/LoginForm.php') ?>
             <?= $renderSourcePanel('RegisterForm', 'src/View/RegisterForm.php') ?>
             <?= $renderSourcePanel('TotpForm', 'src/View/TotpForm.php') ?>
+            <?= $renderSourcePanel('ForgotPasswordForm', 'src/View/ForgotPasswordForm.php') ?>
+            <?= $renderSourcePanel('ResetPasswordForm', 'src/View/ResetPasswordForm.php') ?>
         </section>
     </div>
 </div>

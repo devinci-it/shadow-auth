@@ -6,6 +6,8 @@ namespace Devinci\ShadowAuth\Facade;
 
 use Devinci\ShadowAuth\Core\AuthManager;
 use Devinci\ShadowAuth\Core\Config;
+use Devinci\ShadowAuth\Core\PasswordResetManager;
+use Devinci\ShadowAuth\Core\RegistrationConstraintPolicy;
 use Devinci\ShadowAuth\Core\RegistrationManager;
 use Devinci\ShadowAuth\Providers\FileUserProvider;
 use Devinci\ShadowAuth\Services\TwoFactorService;
@@ -19,10 +21,14 @@ final class Auth
         $provider = new FileUserProvider((string) Config::get('storage_path'));
         $provider->initialize();
 
+        $registrationConstraints = (array) Config::get('registration_constraints', []);
+        $registrationConstraintPolicy = new RegistrationConstraintPolicy($provider, $registrationConstraints);
+
         self::$manager = new AuthManager(
             $provider,
             new TwoFactorService(),
-            new RegistrationManager($provider),
+            new RegistrationManager($provider, $registrationConstraintPolicy),
+            new PasswordResetManager($provider),
             (string) Config::get('session_key', 'shadow_auth_user')
         );
     }
@@ -35,6 +41,26 @@ final class Auth
     public static function registerWithData(string $username, string $password, array $attributes): bool
     {
         return self::manager()->registerWithData($username, $password, $attributes);
+    }
+
+    public static function registrationError(): ?string
+    {
+        return self::manager()->registrationError();
+    }
+
+    public static function requestPasswordResetToken(string $identifier): ?string
+    {
+        return self::manager()->requestPasswordResetToken($identifier);
+    }
+
+    public static function hasValidPasswordResetToken(string $token): bool
+    {
+        return self::manager()->hasValidPasswordResetToken($token);
+    }
+
+    public static function resetPasswordWithToken(string $token, string $newPassword): bool
+    {
+        return self::manager()->resetPasswordWithToken($token, $newPassword);
     }
 
     public static function attempt(string $username, string $password, ?string $totp = null): bool

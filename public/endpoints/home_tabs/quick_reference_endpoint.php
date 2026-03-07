@@ -12,6 +12,7 @@ declare(strict_types=1);
     <strong>On this tab</strong>
     <a href="#quickref-seed">Seed Demo Users</a>
     <a href="#quickref-login">Login Flows</a>
+    <a href="#quickref-reset">Password Reset</a>
     <a href="#quickref-2fa">2FA Setup/Verify</a>
     <a href="#quickref-protected">Protected Pages</a>
     <a href="#quickref-caveats">Caveats</a>
@@ -33,8 +34,17 @@ declare(strict_types=1);
     </ul>
 </section>
 
+<section id="quickref-reset" class="wiki-section">
+    <h3>3) Password Reset</h3>
+    <ol>
+        <li>Open <code>forgot_password.php</code> and submit username or email.</li>
+        <li>Use generated reset URL to open <code>reset_password.php?token=...</code>.</li>
+        <li>Submit new password + confirmation (minimum 8 chars).</li>
+    </ol>
+</section>
+
 <section id="quickref-2fa" class="wiki-section">
-    <h3>3) 2FA Setup & Verify</h3>
+    <h3>4) 2FA Setup & Verify</h3>
     <ul>
         <li><strong>Setup:</strong> go to <code>setup_2fa.php?mode=setup</code>, generate secret, scan QR, confirm 6-digit code.</li>
         <li><strong>Verify:</strong> go to <code>setup_2fa.php?mode=verify</code> only when login has pending TOTP.</li>
@@ -42,7 +52,7 @@ declare(strict_types=1);
 </section>
 
 <section id="quickref-protected" class="wiki-section">
-    <h3>4) Protected Page Pattern</h3>
+    <h3>5) Protected Page Pattern</h3>
     <pre><code><?= htmlspecialchars("Auth::requireAuth('" . $loginUrl . "');\n// protected page content", ENT_QUOTES, 'UTF-8') ?></code></pre>
     <p>Current dashboard already uses this pattern.</p>
 </section>

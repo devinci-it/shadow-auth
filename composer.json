@@ -4,7 +4,8 @@
   "type": "library",
   "license": "MIT",
   "bin": [
-    "bin/shadow-auth-publish-demo"
+    "bin/shadow-auth-publish-demo",
+    "bin/shadow-auth-tag-release"
   ],
   "require": {
     "php": ">=8.1"
@@ -13,7 +14,9 @@
     "publish-demo": "@php vendor/bin/shadow-auth-publish-demo",
     "publish-demo-force": "@php vendor/bin/shadow-auth-publish-demo --force",
     "publish-endpoints": "@php vendor/bin/shadow-auth-publish-demo --endpoints",
-    "publish-endpoints-force": "@php vendor/bin/shadow-auth-publish-demo --endpoints --force"
+    "publish-endpoints-force": "@php vendor/bin/shadow-auth-publish-demo --endpoints --force",
+    "release-tag": "@php bin/shadow-auth-tag-release",
+    "release-tag-push": "@php bin/shadow-auth-tag-release --push"
   },
   "autoload": {
     "psr-4": {

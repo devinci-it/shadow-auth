@@ -24,7 +24,7 @@ if ($page === 'overview') {
     }
 }
 
-$homeTabs = ['overview', 'quick_reference', 'login', 'register', '2fa_verify', '2fa_setup', 'dashboard', 'source_code'];
+$homeTabs = ['overview', 'quick_reference', 'login', 'password_reset', 'register', '2fa_verify', '2fa_setup', 'dashboard', 'source_code'];
 if (!in_array($homeTab, $homeTabs, true)) $homeTab = 'login';
 
 $routes = require __DIR__ . '/routes.php';
@@ -41,6 +41,8 @@ if ($page === 'home') {
     $isPublicMode = defined('SHADOW_AUTH_PUBLIC_MODE') && SHADOW_AUTH_PUBLIC_MODE;
     $loginUrl = $isPublicMode ? shadow_auth_public_url('login') : '/views/login.php';
     $registerUrl = $isPublicMode ? shadow_auth_public_url('register') : '/views/register.php';
+    $forgotPasswordUrl = $isPublicMode ? shadow_auth_public_url('forgot_password') : '/views/forgot_password.php';
+    $resetPasswordUrl = $isPublicMode ? shadow_auth_public_url('reset_password') : '/views/reset_password.php';
     $totpUrl = $isPublicMode ? shadow_auth_public_url('setup_2fa') : '/views/setup_2fa.php';
     $totpSetupUrl = $isPublicMode ? shadow_auth_public_url('setup_2fa') . '&mode=setup' : '/views/setup_2fa.php?mode=setup';
     $totpVerifyUrl = $isPublicMode ? shadow_auth_public_url('setup_2fa') . '&mode=verify' : '/views/setup_2fa.php?mode=verify';
@@ -97,6 +99,8 @@ if ($page === 'home') {
     ];
 
     $loginFormPreview = (new Devinci\ShadowAuth\View\LoginForm())->render();
+    $forgotPasswordFormPreview = (new Devinci\ShadowAuth\View\ForgotPasswordForm())->render();
+    $resetPasswordFormPreview = (new Devinci\ShadowAuth\View\ResetPasswordForm())->setToken('demo-token-placeholder')->render();
     $registerFormPreview = (new Devinci\ShadowAuth\View\RegisterForm())->setExtraFields($registerExtraFields)->render();
     $totpFormPreview = (new Devinci\ShadowAuth\View\TotpForm())->render();
 
@@ -159,6 +163,7 @@ if ($page === 'home') {
         'overview' => __DIR__ . '/endpoints/home_tabs/overview_endpoint.php',
         'quick_reference' => __DIR__ . '/endpoints/home_tabs/quick_reference_endpoint.php',
         'login' => __DIR__ . '/endpoints/home_tabs/login_endpoint.php',
+        'password_reset' => __DIR__ . '/endpoints/home_tabs/password_reset_endpoint.php',
         'register' => __DIR__ . '/endpoints/home_tabs/register_endpoint.php',
         '2fa_verify' => __DIR__ . '/endpoints/home_tabs/twofa_verify_endpoint.php',
         '2fa_setup' => __DIR__ . '/endpoints/home_tabs/twofa_setup_endpoint.php',
@@ -178,6 +183,8 @@ if ($page === 'home') {
     $pageTitle = match ($page) {
         'overview' => 'Overview',
         'login' => 'Login',
+        'forgot_password' => 'Forgot Password',
+        'reset_password' => 'Reset Password',
         'register' => 'Register',
         'setup_2fa' => 'Two-Factor Authentication',
         'dashboard' => 'Dashboard',

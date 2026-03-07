@@ -6,6 +6,8 @@ return [
     'demo' => null,
     'overview' => dirname(__DIR__) . '/views/overview.php',
     'login' => dirname(__DIR__) . '/views/login.php',
+    'forgot_password' => dirname(__DIR__) . '/views/forgot_password.php',
+    'reset_password' => dirname(__DIR__) . '/views/reset_password.php',
     'register' => dirname(__DIR__) . '/views/register.php',
     'setup_2fa' => dirname(__DIR__) . '/views/setup_2fa.php',
     'dashboard' => dirname(__DIR__) . '/views/dashboard.php',

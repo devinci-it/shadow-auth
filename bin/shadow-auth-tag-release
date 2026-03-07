@@ -1,0 +1,143 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Release helper for semantic version tags.
+ *
+ * Usage:
+ *   shadow-auth-tag-release <version> [--push] [--remote=origin]
+ *   shadow-auth-tag-release v0.0.3 --push
+ */
+
+$args = $_SERVER['argv'] ?? [];
+array_shift($args);
+
+if (in_array('--help', $args, true) || in_array('-h', $args, true) || count($args) === 0) {
+    fwrite(STDOUT, "Shadow Auth Tag Release\n\n");
+    fwrite(STDOUT, "Usage:\n");
+    fwrite(STDOUT, "  shadow-auth-tag-release <version> [--push] [--remote=origin]\n\n");
+    fwrite(STDOUT, "Examples:\n");
+    fwrite(STDOUT, "  shadow-auth-tag-release 0.0.3\n");
+    fwrite(STDOUT, "  shadow-auth-tag-release v0.0.3 --push\n");
+    exit(0);
+}
+
+$versionInput = null;
+$push = false;
+$remote = 'origin';
+
+foreach ($args as $arg) {
+    if ($arg === '--push') {
+        $push = true;
+        continue;
+    }
+
+    if (str_starts_with($arg, '--remote=')) {
+        $candidate = trim(substr($arg, strlen('--remote=')));
+        if ($candidate !== '') {
+            $remote = $candidate;
+        }
+        continue;
+    }
+
+    if ($versionInput === null) {
+        $versionInput = $arg;
+    }
+}
+
+if ($versionInput === null) {
+    fail('Missing version. Example: shadow-auth-tag-release 0.0.3');
+}
+
+$version = normalizeVersion($versionInput);
+if (!isValidSemver($version)) {
+    fail('Invalid semantic version. Use format like 0.0.3 or 1.2.0-rc.1');
+}
+
+$tag = 'v' . $version;
+
+ensureGitRepository();
+ensureTagNotExistsLocally($tag);
+ensureTagNotExistsOnRemote($tag, $remote);
+
+runCommand(['git', 'tag', '-a', $tag, '-m', "Release {$tag}"]);
+
+fwrite(STDOUT, "Created annotated tag {$tag}\n");
+
+if ($push) {
+    runCommand(['git', 'push', $remote, $tag]);
+    fwrite(STDOUT, "Pushed tag {$tag} to {$remote}\n");
+} else {
+    fwrite(STDOUT, "Tag created locally. Push with: git push {$remote} {$tag}\n");
+}
+
+function normalizeVersion(string $input): string
+{
+    $input = trim($input);
+    if (str_starts_with($input, 'v') || str_starts_with($input, 'V')) {
+        return substr($input, 1);
+    }
+
+    return $input;
+}
+
+function isValidSemver(string $version): bool
+{
+    return (bool) preg_match('/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/', $version);
+}
+
+function ensureGitRepository(): void
+{
+    $result = runCommand(['git', 'rev-parse', '--is-inside-work-tree'], true);
+    if (trim($result) !== 'true') {
+        fail('This command must be run inside a git repository.');
+    }
+}
+
+function ensureTagNotExistsLocally(string $tag): void
+{
+    $result = runCommand(['git', 'tag', '--list', $tag], true);
+    if (trim($result) !== '') {
+        fail("Tag {$tag} already exists locally.");
+    }
+}
+
+function ensureTagNotExistsOnRemote(string $tag, string $remote): void
+{
+    $result = runCommand(['git', 'ls-remote', '--tags', $remote, $tag], true);
+    if (trim($result) !== '') {
+        fail("Tag {$tag} already exists on remote {$remote}.");
+    }
+}
+
+function runCommand(array $parts, bool $captureOutput = false): string
+{
+    $escaped = array_map(static fn(string $p): string => escapeshellarg($p), $parts);
+    $command = implode(' ', $escaped) . ' 2>&1';
+
+    if ($captureOutput) {
+        $output = [];
+        $code = 0;
+        exec($command, $output, $code);
+        if ($code !== 0) {
+            fail(trim(implode("\n", $output)) ?: 'Command failed: ' . implode(' ', $parts));
+        }
+
+        return implode("\n", $output);
+    }
+
+    passthru($command, $code);
+    if ($code !== 0) {
+        fail('Command failed: ' . implode(' ', $parts));
+    }
+
+    return '';
+}
+
+function fail(string $message): void
+{
+    fwrite(STDERR, $message . "\n");
+    exit(1);
+}

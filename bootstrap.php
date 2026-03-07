@@ -28,6 +28,17 @@ if (!defined('SHADOW_AUTH_BOOTSTRAPPED')) {
         ]);
     }
 
+    if (!Config::has('registration_constraints')) {
+        Config::set([
+            'registration_constraints' => [
+                // Add fields here to enforce uniqueness during registration.
+                'unique_fields' => ['username'],
+                // Fields listed here are compared in case-insensitive mode.
+                'case_insensitive_fields' => ['username', 'email'],
+            ],
+        ]);
+    }
+
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }

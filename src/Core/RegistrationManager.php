@@ -16,8 +16,14 @@ final class RegistrationManager
         'created_at',
     ];
 
-    public function __construct(private readonly FileUserProvider $provider)
-    {
+    private ?string $lastError = null;
+    private RegistrationConstraintPolicy $constraintPolicy;
+
+    public function __construct(
+        private readonly FileUserProvider $provider,
+        ?RegistrationConstraintPolicy $constraintPolicy = null
+    ) {
+        $this->constraintPolicy = $constraintPolicy ?? new RegistrationConstraintPolicy($provider);
     }
 
     public function register(string $username, string $password): bool
@@ -27,17 +33,22 @@ final class RegistrationManager
 
     public function registerWithData(string $username, string $password, array $attributes): bool
     {
+        $this->lastError = null;
         $username = trim($username);
 
         if ($username === '' || $password === '') {
-            return false;
-        }
-
-        if ($this->provider->findByUsername($username) !== null) {
+            $this->lastError = 'Username and password are required.';
             return false;
         }
 
         $customAttributes = $this->sanitizeCustomAttributes($attributes);
+
+        $constraintPayload = array_merge(['username' => $username], $customAttributes);
+        $violation = $this->constraintPolicy->violationMessageFor($constraintPayload);
+        if ($violation !== null) {
+            $this->lastError = $violation;
+            return false;
+        }
 
         $record = [
             'username' => $username,
@@ -50,6 +61,11 @@ final class RegistrationManager
         $record = array_merge($record, $customAttributes);
 
         return $this->provider->create($record);
+    }
+
+    public function lastError(): ?string
+    {
+        return $this->lastError;
     }
 
     private function sanitizeCustomAttributes(array $attributes): array

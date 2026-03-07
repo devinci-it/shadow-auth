@@ -15,6 +15,7 @@ final class AuthManager
         private readonly FileUserProvider $provider,
         private readonly TwoFactorService $twoFactorService,
         private readonly RegistrationManager $registrationManager,
+        private readonly PasswordResetManager $passwordResetManager,
         private readonly string $sessionKey
     ) {
         $this->pendingSessionKey = $this->sessionKey . '_pending_totp';
@@ -28,6 +29,26 @@ final class AuthManager
     public function registerWithData(string $username, string $password, array $attributes): bool
     {
         return $this->registrationManager->registerWithData($username, $password, $attributes);
+    }
+
+    public function registrationError(): ?string
+    {
+        return $this->registrationManager->lastError();
+    }
+
+    public function requestPasswordResetToken(string $identifier): ?string
+    {
+        return $this->passwordResetManager->requestResetToken($identifier);
+    }
+
+    public function hasValidPasswordResetToken(string $token): bool
+    {
+        return $this->passwordResetManager->hasValidToken($token);
+    }
+
+    public function resetPasswordWithToken(string $token, string $newPassword): bool
+    {
+        return $this->passwordResetManager->resetPasswordWithToken($token, $newPassword);
     }
 
     public function attempt(string $username, string $password, ?string $totpCode = null): bool

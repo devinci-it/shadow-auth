@@ -125,6 +125,8 @@ cd shadow-auth-demo
 composer install
 ```
 
+Note on versions: for `0.0.x` packages, Composer caret ranges like `^0.0.1` are very strict and do not auto-upgrade to `0.0.2`. Use a range like `>=0.0.1 <0.1.0` when you want updates across `0.0.x` tags.
+
 To overwrite existing published files:
 
 ```bash
@@ -163,6 +165,34 @@ Publish only demo public assets (`public/`) into the current project root:
 - `composer publish-endpoints` → copy package `views/` to host `views/`
 - `composer publish-endpoints-force` → overwrite host `views/`
 
+## Version Tagging
+
+Use the built-in release helper to create semantic version tags.
+
+Create a local tag:
+
+```bash
+./bin/shadow-auth-tag-release 0.0.3
+```
+
+Create and push a tag:
+
+```bash
+./bin/shadow-auth-tag-release 0.0.3 --push
+```
+
+Composer shortcuts:
+
+```bash
+composer release-tag -- 0.0.3
+composer release-tag -- 0.0.3 --push
+```
+
+Notes:
+
+- Tags are created as annotated tags: `v<version>`.
+- The script validates SemVer and blocks duplicate local/remote tags.
+
 ## Composer Autoload
 
 In the package `composer.json`, map the namespace root:
@@ -199,10 +229,31 @@ use Devinci\ShadowAuth\Facade\Auth;
 Config::set([
         'storage_path' => __DIR__ . '/storage/shadow.php',
         'totp_enabled' => true,
+    'registration_constraints' => [
+        // Enforce uniqueness for any attributes persisted by registration.
+        'unique_fields' => ['username', 'email'],
+        // Compare selected fields case-insensitively.
+        'case_insensitive_fields' => ['username', 'email'],
+    ],
 ]);
 
 Auth::boot();
 ```
+
+### Registration Constraints
+
+`registration_constraints` lets developers define uniqueness rules without changing processor logic.
+
+```php
+Config::set([
+    'registration_constraints' => [
+        'unique_fields' => ['username', 'email'],
+        'case_insensitive_fields' => ['username', 'email'],
+    ],
+]);
+```
+
+If a constraint fails, registration now returns a field-specific message like `Email is already in use.`.
 
 ### 2) Register User
 

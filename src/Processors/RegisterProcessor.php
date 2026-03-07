@@ -77,7 +77,7 @@ final class RegisterProcessor extends BaseProcessor
         }
 
         if (!Auth::registerWithData($username, $password, $attributes)) {
-            Flash::set('Registration failed. Username may already exist.');
+            Flash::set(Auth::registrationError() ?? 'Registration failed.');
             return;
         }
 

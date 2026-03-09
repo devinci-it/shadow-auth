@@ -1,0 +1,475 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+final class DemoServeException extends RuntimeException
+{
+}
+
+/**
+ * @return array{
+ *   host:string,
+ *   port:int,
+ *   target:?string,
+ *   force:bool,
+ *   no_install:bool,
+ *   php_bin:string,
+ *   composer_bin:string
+ * }
+ */
+function parseArguments(array $argv): array
+{
+    $options = [
+        'host' => '127.0.0.1',
+        'port' => 8500,
+        'target' => null,
+        'force' => false,
+        'no_install' => false,
+        'php_bin' => 'php',
+        'composer_bin' => 'composer',
+    ];
+
+    for ($index = 1, $total = count($argv); $index < $total; $index++) {
+        $arg = (string) $argv[$index];
+
+        if ($arg === '--help' || $arg === '-h') {
+            printUsage();
+            exit(0);
+        }
+
+        if ($arg === '--force') {
+            $options['force'] = true;
+            continue;
+        }
+
+        if ($arg === '--no-install') {
+            $options['no_install'] = true;
+            continue;
+        }
+
+        if (str_starts_with($arg, '--host=')) {
+            $options['host'] = trim(substr($arg, strlen('--host=')));
+            continue;
+        }
+
+        if ($arg === '--host') {
+            $index++;
+            if (!isset($argv[$index])) {
+                throw new DemoServeException('Missing value for --host.');
+            }
+
+            $options['host'] = trim((string) $argv[$index]);
+            continue;
+        }
+
+        if (str_starts_with($arg, '--port=')) {
+            $options['port'] = (int) trim(substr($arg, strlen('--port=')));
+            continue;
+        }
+
+        if ($arg === '--port') {
+            $index++;
+            if (!isset($argv[$index])) {
+                throw new DemoServeException('Missing value for --port.');
+            }
+
+            $options['port'] = (int) trim((string) $argv[$index]);
+            continue;
+        }
+
+        if (str_starts_with($arg, '--target=')) {
+            $options['target'] = trim(substr($arg, strlen('--target=')));
+            continue;
+        }
+
+        if ($arg === '--target') {
+            $index++;
+            if (!isset($argv[$index])) {
+                throw new DemoServeException('Missing value for --target.');
+            }
+
+            $options['target'] = trim((string) $argv[$index]);
+            continue;
+        }
+
+        if (str_starts_with($arg, '--php-bin=')) {
+            $options['php_bin'] = trim(substr($arg, strlen('--php-bin=')));
+            continue;
+        }
+
+        if ($arg === '--php-bin') {
+            $index++;
+            if (!isset($argv[$index])) {
+                throw new DemoServeException('Missing value for --php-bin.');
+            }
+
+            $options['php_bin'] = trim((string) $argv[$index]);
+            continue;
+        }
+
+        if (str_starts_with($arg, '--composer-bin=')) {
+            $options['composer_bin'] = trim(substr($arg, strlen('--composer-bin=')));
+            continue;
+        }
+
+        if ($arg === '--composer-bin') {
+            $index++;
+            if (!isset($argv[$index])) {
+                throw new DemoServeException('Missing value for --composer-bin.');
+            }
+
+            $options['composer_bin'] = trim((string) $argv[$index]);
+            continue;
+        }
+
+        throw new DemoServeException('Unknown argument: ' . $arg);
+    }
+
+    if ($options['host'] === '') {
+        throw new DemoServeException('Host cannot be empty.');
+    }
+
+    if (!preg_match('/^[a-zA-Z0-9.\-:\[\]]+$/', $options['host'])) {
+        throw new DemoServeException('Host contains unsupported characters.');
+    }
+
+    if ($options['port'] < 1 || $options['port'] > 65535) {
+        throw new DemoServeException('Port must be between 1 and 65535.');
+    }
+
+    return $options;
+}
+
+function printUsage(): void
+{
+    $usage = <<<'TXT'
+Shadow Auth Demo Serve Helper
+
+Creates an isolated demo app under /tmp (or a custom target), installs dependencies,
+and serves it locally with PHP's built-in server.
+
+Usage:
+  shadow-auth-serve-demo [options]
+
+Options:
+  --target <path>       Demo target directory. Default: generated under /tmp
+  --force               Remove existing target before recreating
+  --host <host>         Bind host. Default: 127.0.0.1
+  --port <port>         Bind port. Default: 8500
+  --no-install          Skip composer install (expects vendor already present)
+  --php-bin <bin>       PHP executable to run server. Default: php
+  --composer-bin <bin>  Composer executable to install deps. Default: composer
+  -h, --help            Show this help
+
+Examples:
+  shadow-auth-serve-demo
+  shadow-auth-serve-demo --target /tmp/shadow-auth-demo --force
+  shadow-auth-serve-demo --host 127.0.0.1 --port 8500
+  shadow-auth-serve-demo --no-install --target /tmp/shadow-auth-demo
+TXT;
+
+    fwrite(STDOUT, $usage . PHP_EOL);
+}
+
+function requirePathExists(string $path, string $label): void
+{
+    if (!file_exists($path)) {
+        throw new DemoServeException($label . ' not found: ' . $path);
+    }
+}
+
+function ensureCommandAvailable(string $command, string $label): void
+{
+    $lookupCommand = sprintf('command -v %s >/dev/null 2>&1', escapeshellarg($command));
+    exec($lookupCommand, $output, $exitCode);
+
+    if ($exitCode !== 0) {
+        throw new DemoServeException($label . ' executable not found in PATH: ' . $command);
+    }
+}
+
+function createTargetDirectory(?string $inputTarget, bool $force): string
+{
+    if ($inputTarget === null || $inputTarget === '') {
+        $base = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
+        $target = sprintf(
+            '%s%sshadow-auth-demo-%s-%s',
+            $base,
+            DIRECTORY_SEPARATOR,
+            date('Ymd-His'),
+            bin2hex(random_bytes(4))
+        );
+    } else {
+        $target = $inputTarget;
+        if (!str_starts_with($target, DIRECTORY_SEPARATOR)) {
+            $target = getcwd() . DIRECTORY_SEPARATOR . $target;
+        }
+    }
+
+    if (is_dir($target)) {
+        if (!$force) {
+            throw new DemoServeException('Target directory already exists. Use --force: ' . $target);
+        }
+
+        deleteDirectoryRecursive($target);
+    } elseif (file_exists($target)) {
+        throw new DemoServeException('Target path exists and is not a directory: ' . $target);
+    }
+
+    if (!mkdir($target, 0775, true) && !is_dir($target)) {
+        throw new DemoServeException('Could not create target directory: ' . $target);
+    }
+
+    return $target;
+}
+
+function deleteDirectoryRecursive(string $path): void
+{
+    if (!is_dir($path)) {
+        return;
+    }
+
+    $items = scandir($path);
+    if ($items === false) {
+        throw new DemoServeException('Could not list directory for cleanup: ' . $path);
+    }
+
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') {
+            continue;
+        }
+
+        $child = $path . DIRECTORY_SEPARATOR . $item;
+        if (is_dir($child) && !is_link($child)) {
+            deleteDirectoryRecursive($child);
+            continue;
+        }
+
+        if (!unlink($child)) {
+            throw new DemoServeException('Could not remove file during cleanup: ' . $child);
+        }
+    }
+
+    if (!rmdir($path)) {
+        throw new DemoServeException('Could not remove directory during cleanup: ' . $path);
+    }
+}
+
+function copyFileStrict(string $source, string $destination): void
+{
+    $parent = dirname($destination);
+    if (!is_dir($parent) && !mkdir($parent, 0775, true) && !is_dir($parent)) {
+        throw new DemoServeException('Could not create destination directory: ' . $parent);
+    }
+
+    if (!copy($source, $destination)) {
+        throw new DemoServeException('Failed copying file: ' . $source . ' -> ' . $destination);
+    }
+}
+
+function writeFileStrict(string $destination, string $content): void
+{
+    $parent = dirname($destination);
+    if (!is_dir($parent) && !mkdir($parent, 0775, true) && !is_dir($parent)) {
+        throw new DemoServeException('Could not create destination directory: ' . $parent);
+    }
+
+    if (file_put_contents($destination, $content) === false) {
+        throw new DemoServeException('Failed writing file: ' . $destination);
+    }
+}
+
+function copyDirectoryRecursive(string $source, string $destination): void
+{
+    if (!is_dir($source)) {
+        throw new DemoServeException('Source directory missing: ' . $source);
+    }
+
+    if (!is_dir($destination) && !mkdir($destination, 0775, true) && !is_dir($destination)) {
+        throw new DemoServeException('Could not create destination directory: ' . $destination);
+    }
+
+    $entries = scandir($source);
+    if ($entries === false) {
+        throw new DemoServeException('Could not list source directory: ' . $source);
+    }
+
+    foreach ($entries as $entry) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+
+        $src = $source . DIRECTORY_SEPARATOR . $entry;
+        $dst = $destination . DIRECTORY_SEPARATOR . $entry;
+
+        if (is_dir($src) && !is_link($src)) {
+            copyDirectoryRecursive($src, $dst);
+            continue;
+        }
+
+        copyFileStrict($src, $dst);
+    }
+}
+
+function writeDemoComposerJson(string $templatePath, string $targetPath, string $packageRoot): void
+{
+    $raw = file_get_contents($templatePath);
+    if ($raw === false) {
+        throw new DemoServeException('Could not read demo composer template: ' . $templatePath);
+    }
+
+    $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+    if (!is_array($decoded)) {
+        throw new DemoServeException('Demo composer template is not a valid JSON object.');
+    }
+
+    if (!isset($decoded['require']) || !is_array($decoded['require'])) {
+        $decoded['require'] = [];
+    }
+
+    $decoded['require']['devinci-it/shadow-auth'] = '*';
+
+    $pathRepo = [
+        'type' => 'path',
+        'url' => $packageRoot,
+        'options' => [
+            'symlink' => true,
+        ],
+    ];
+
+    $repositories = isset($decoded['repositories']) && is_array($decoded['repositories']) ? $decoded['repositories'] : [];
+    array_unshift($repositories, $pathRepo);
+    $decoded['repositories'] = $repositories;
+
+    $encoded = json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+    if ($encoded === false) {
+        throw new DemoServeException('Could not encode generated composer.json content.');
+    }
+
+    $encoded .= PHP_EOL;
+
+    if (file_put_contents($targetPath, $encoded) === false) {
+        throw new DemoServeException('Could not write generated composer.json: ' . $targetPath);
+    }
+}
+
+function assertPortAvailable(string $host, int $port): void
+{
+    $errno = 0;
+    $errstr = '';
+    $server = @stream_socket_server('tcp://' . $host . ':' . $port, $errno, $errstr);
+    if ($server === false) {
+        throw new DemoServeException(sprintf('Cannot bind to %s:%d (%s).', $host, $port, $errstr !== '' ? $errstr : 'unknown error'));
+    }
+
+    fclose($server);
+}
+
+function runProcess(string $command, string $workingDirectory): void
+{
+    $oldCwd = getcwd();
+    if ($oldCwd === false) {
+        throw new DemoServeException('Could not resolve current working directory.');
+    }
+
+    if (!chdir($workingDirectory)) {
+        throw new DemoServeException('Could not switch to directory: ' . $workingDirectory);
+    }
+
+    passthru($command, $exitCode);
+
+    chdir($oldCwd);
+
+    if ($exitCode !== 0) {
+        throw new DemoServeException('Command failed with exit code ' . $exitCode . ': ' . $command);
+    }
+}
+
+function out(string $message): void
+{
+    fwrite(STDOUT, $message . PHP_EOL);
+}
+
+function err(string $message): void
+{
+    fwrite(STDERR, $message . PHP_EOL);
+}
+
+try {
+    $options = parseArguments($_SERVER['argv'] ?? []);
+
+    $packageRoot = realpath(__DIR__ . '/..');
+    if ($packageRoot === false) {
+        throw new DemoServeException('Could not determine package root.');
+    }
+
+    $bootstrapPath = $packageRoot . '/bootstrap.php';
+    $publicPath = $packageRoot . '/public';
+    $viewsPath = $packageRoot . '/views';
+    $templateComposerPath = $packageRoot . '/assets/templates/demo.composer.json';
+    $storageIgnorePath = $packageRoot . '/storage/.gitignore';
+
+    requirePathExists($bootstrapPath, 'bootstrap.php');
+    requirePathExists($publicPath, 'public directory');
+    requirePathExists($viewsPath, 'views directory');
+    requirePathExists($templateComposerPath, 'demo composer template');
+
+    ensureCommandAvailable($options['php_bin'], 'PHP');
+    if (!$options['no_install']) {
+        ensureCommandAvailable($options['composer_bin'], 'Composer');
+    }
+
+    $targetRoot = createTargetDirectory($options['target'], $options['force']);
+
+    out('Preparing demo files...');
+    copyFileStrict($bootstrapPath, $targetRoot . '/bootstrap.php');
+    copyDirectoryRecursive($publicPath, $targetRoot . '/public');
+    copyDirectoryRecursive($viewsPath, $targetRoot . '/views');
+
+    if (is_file($storageIgnorePath)) {
+        copyFileStrict($storageIgnorePath, $targetRoot . '/storage/.gitignore');
+    } else {
+        writeFileStrict($targetRoot . '/storage/.gitignore', "*\n!.gitignore\n");
+    }
+
+    writeDemoComposerJson($templateComposerPath, $targetRoot . '/composer.json', $packageRoot);
+
+    if (!$options['no_install']) {
+        out('Installing demo dependencies with Composer...');
+        $composerCommand = sprintf(
+            '%s install --no-interaction --prefer-dist --no-progress',
+            escapeshellcmd($options['composer_bin'])
+        );
+        runProcess($composerCommand, $targetRoot);
+    }
+
+    $autoloadPath = $targetRoot . '/vendor/autoload.php';
+    if (!is_file($autoloadPath)) {
+        throw new DemoServeException('Missing vendor/autoload.php. Run without --no-install or run composer install manually in: ' . $targetRoot);
+    }
+
+    assertPortAvailable($options['host'], $options['port']);
+
+    out('');
+    out('Demo is ready.');
+    out('Path: ' . $targetRoot);
+    out('URL:  http://' . $options['host'] . ':' . $options['port'] . '/');
+    out('');
+    out('Tips:');
+    out('- Home tabs are available under /?page=home.');
+    out('- Use Ctrl+C to stop the server.');
+    out('');
+
+    $serveCommand = sprintf(
+        '%s -S %s -t public',
+        escapeshellcmd($options['php_bin']),
+        escapeshellarg($options['host'] . ':' . $options['port'])
+    );
+
+    runProcess($serveCommand, $targetRoot);
+} catch (Throwable $exception) {
+    err('Demo serve failed: ' . $exception->getMessage());
+    err('Run with --help for usage examples.');
+    exit(1);
+}

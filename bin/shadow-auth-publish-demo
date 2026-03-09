@@ -24,7 +24,7 @@ if ($autoloadPath === null) {
 
 require $autoloadPath;
 
-use Devinci\ShadowAuth\Publisher\Publisher;
+use DevinciIT\ShadowAuth\Publisher\Publisher;
 
 $args = $_SERVER['argv'] ?? [];
 array_shift($args);

@@ -12,6 +12,7 @@ A lightweight, file-based PHP authentication library with optional TOTP 2FA, CSR
 - [Auth Flows](#auth-flows)
 - [Facade API](#facade-api)
 - [Publishing Demo, Endpoints, and Wiki](#publishing-demo-endpoints-and-wiki)
+- [Serve Demo Locally](#serve-demo-locally)
 - [Class Wiki](#class-wiki)
 - [Security Notes](#security-notes)
 - [Release and Tagging](#release-and-tagging)
@@ -222,6 +223,36 @@ composer publish-demo
 composer publish-demo-force
 composer publish-endpoints
 composer publish-endpoints-force
+```
+
+## Serve Demo Locally
+
+Use the dedicated helper to create an isolated demo in `/tmp`, generate a proper `composer.json`, install dependencies, and run PHP's local server.
+
+```bash
+./vendor/bin/shadow-auth-serve-demo
+```
+
+Default behavior:
+
+- Creates target directory under `/tmp/shadow-auth-demo-*`
+- Copies `bootstrap.php`, `public/`, and `views/`
+- Writes `composer.json` from the demo template and points dependency to local path repo
+- Runs `composer install`
+- Serves `http://127.0.0.1:8500` with `php -S 127.0.0.1:8500 -t public`
+
+Useful flags:
+
+```bash
+./vendor/bin/shadow-auth-serve-demo --target /tmp/shadow-auth-demo --force
+./vendor/bin/shadow-auth-serve-demo --port 8600
+./vendor/bin/shadow-auth-serve-demo --no-install
+```
+
+Composer alias:
+
+```bash
+composer serve-demo
 ```
 
 ## Class Wiki

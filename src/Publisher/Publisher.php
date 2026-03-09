@@ -6,6 +6,9 @@ namespace DevinciIT\ShadowAuth\Publisher;
 
 use RuntimeException;
 
+/**
+ * Publishes demo, wiki, endpoint, and public assets into a host project.
+ */
 final class Publisher
 {
     public static function publishPublic(?string $projectRoot = null, bool $force = false): array

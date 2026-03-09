@@ -8,6 +8,9 @@ use DevinciIT\ShadowAuth\Core\Flash;
 use DevinciIT\ShadowAuth\Facade\Auth;
 use DevinciIT\ShadowAuth\Utils\CSRF;
 
+/**
+ * Handles forgot-password form submissions and reset link generation.
+ */
 final class ForgotPasswordProcessor extends BaseProcessor
 {
     public function __construct(private readonly string $resetPageUrl)

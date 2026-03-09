@@ -6,6 +6,9 @@ namespace DevinciIT\ShadowAuth\Core;
 
 use DevinciIT\ShadowAuth\Providers\FileUserProvider;
 
+/**
+ * Issues and validates password reset tokens, then updates password hashes.
+ */
 final class PasswordResetManager
 {
     private const TOKEN_TTL_SECONDS = 1800;
@@ -14,6 +17,9 @@ final class PasswordResetManager
     {
     }
 
+    /**
+     * Creates a reset token for a user resolved by username or email.
+     */
     public function requestResetToken(string $identifier): ?string
     {
         $user = $this->findByIdentifier($identifier);
@@ -63,6 +69,9 @@ final class PasswordResetManager
         ]);
     }
 
+    /**
+     * Returns whether a reset token exists and is still valid.
+     */
     public function hasValidToken(string $token): bool
     {
         return $this->findByValidToken($token) !== null;

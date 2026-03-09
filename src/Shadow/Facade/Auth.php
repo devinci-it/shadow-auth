@@ -6,6 +6,9 @@ namespace Shadow\Facade;
 
 use BadMethodCallException;
 
+/**
+ * Compatibility facade that forwards to DevinciIT\ShadowAuth\Facade\Auth.
+ */
 final class Auth
 {
     public static function requireAuth(string $redirectTo = '/views/login.php'): void

@@ -6,6 +6,9 @@ namespace DevinciIT\ShadowAuth\Core;
 
 use DevinciIT\ShadowAuth\Publisher\Publisher as NamespacePublisher;
 
+/**
+ * Backward-compatible wrapper around the dedicated publisher namespace.
+ */
 final class Publisher
 {
     public static function publishDemo(?string $projectRoot = null, bool $force = false): array

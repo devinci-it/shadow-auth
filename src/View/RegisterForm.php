@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\View;
 
+/**
+ * Field schema for user registration submissions.
+ */
 final class RegisterForm extends BaseForm
 {
     protected array $requiredFields = [

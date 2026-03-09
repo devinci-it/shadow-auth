@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\View;
 
+/**
+ * Field schema for username/password login submissions.
+ */
 final class LoginForm extends BaseForm
 {
     protected array $requiredFields = [

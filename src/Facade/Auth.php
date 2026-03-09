@@ -12,6 +12,9 @@ use DevinciIT\ShadowAuth\Core\RegistrationManager;
 use DevinciIT\ShadowAuth\Providers\FileUserProvider;
 use DevinciIT\ShadowAuth\Services\TwoFactorService;
 
+/**
+ * Static facade that exposes the package API and delegates to AuthManager.
+ */
 final class Auth
 {
     private static ?AuthManager $manager = null;

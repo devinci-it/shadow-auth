@@ -6,6 +6,9 @@ namespace DevinciIT\ShadowAuth\View;
 
 use DevinciIT\ShadowAuth\Utils\CSRF;
 
+/**
+ * Base class for HTML input rendering with built-in CSRF hidden field.
+ */
 abstract class BaseForm
 {
     protected array $requiredFields = [];

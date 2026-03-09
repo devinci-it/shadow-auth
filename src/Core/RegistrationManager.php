@@ -6,6 +6,9 @@ namespace DevinciIT\ShadowAuth\Core;
 
 use DevinciIT\ShadowAuth\Providers\FileUserProvider;
 
+/**
+ * Handles registration validation and persists normalized user records.
+ */
 final class RegistrationManager
 {
     private const RESERVED_KEYS = [
@@ -26,6 +29,9 @@ final class RegistrationManager
         $this->constraintPolicy = $constraintPolicy ?? new RegistrationConstraintPolicy($provider);
     }
 
+    /**
+     * Registers a user with required username/password fields.
+     */
     public function register(string $username, string $password): bool
     {
         return $this->registerWithData($username, $password, []);

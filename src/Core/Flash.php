@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\Core;
 
+/**
+ * Session-backed one-time message helper for redirect flows.
+ */
 final class Flash
 {
     private const KEY = '_shadow_flash';

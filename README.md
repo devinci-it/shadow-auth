@@ -1,221 +1,63 @@
 # Devinci Shadow Auth
 
-A lightweight, file-based PHP authentication library focused on secure defaults and minimal integration overhead.
+A lightweight, file-based PHP authentication library with optional TOTP 2FA, CSRF protection, and simple processor/form helpers for classic server-rendered apps.
 
-## Namespace
+## Table of Contents
 
-All library classes use:
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+- [Auth Flows](#auth-flows)
+- [Facade API](#facade-api)
+- [Publishing Demo, Endpoints, and Wiki](#publishing-demo-endpoints-and-wiki)
+- [Class Wiki](#class-wiki)
+- [Security Notes](#security-notes)
+- [Release and Tagging](#release-and-tagging)
+- [License](#license)
 
-```php
-namespace DevinciIT\ShadowAuth;
-```
+## Requirements
 
-Sub-namespaces follow the same root, for example:
-
-- `DevinciIT\ShadowAuth\Core`
-- `DevinciIT\ShadowAuth\Facade`
-- `DevinciIT\ShadowAuth\Providers`
-- `DevinciIT\ShadowAuth\Processors`
-- `DevinciIT\ShadowAuth\Services`
-- `DevinciIT\ShadowAuth\Utils`
-- `DevinciIT\ShadowAuth\View`
-
-## Features
-
-- Secure password hashing (`password_hash`, `password_verify`)
-- File-based user provider (no database required)
-- Optional TOTP 2FA support
-- CSRF token generation and validation
-- Session flash messaging
-- Simple static facade for common auth actions
-- Processor classes for clean form handling
-
-## Suggested Structure
-
-```text
-shadow-auth/
-├── src/
-│   ├── Core/
-│   │   ├── AuthManager.php
-│   │   ├── Config.php
-│   │   ├── Flash.php
-│   │   └── RegistrationManager.php
-│   ├── Facade/
-│   │   └── Auth.php
-│   ├── Processors/
-│   │   ├── BaseProcessor.php
-│   │   ├── LoginProcessor.php
-│   │   ├── RegisterProcessor.php
-│   │   └── TOTPProcessor.php
-│   ├── Providers/
-│   │   └── FileUserProvider.php
-│   ├── Services/
-│   │   └── TwoFactorService.php
-│   ├── Utils/
-│   │   └── CSRF.php
-│   └── View/
-│       └── Forms.php
-├── storage/
-│   └── shadow.php
-├── views/
-│   ├── login.php
-│   ├── register.php
-│   ├── setup_2fa.php
-│   ├── dashboard.php
-│   └── logout.php
-└── bootstrap.php
-```
+- PHP `>=8.1`
+- Composer (for package install and autoload)
 
 ## Installation
 
-If using Composer in your app:
+Install through Composer:
 
 ```bash
 composer require devinci-it/shadow-auth
 ```
 
-If this package is local/private, add it as a path repository in your app `composer.json`.
-
-### Local Path Package (Development)
-
-In your consuming app, point Composer to this package folder:
+If you are developing this package locally in another app, use a Composer path repository:
 
 ```json
 {
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../devinci-it-shadow-auth",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
-    "require": {
-        "devinci-it/shadow-auth": "*"
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../devinci-it-shadow-auth",
+      "options": {
+        "symlink": true
+      }
     }
+  ],
+  "require": {
+    "devinci-it/shadow-auth": "*"
+  }
 }
 ```
 
-Then run:
+Then update dependencies:
 
 ```bash
 composer update devinci-it/shadow-auth
 ```
 
-## Publish Demo Scaffold
-
-After installing in a Composer project, publish an isolated ready-to-run demo scaffold with:
-
-```bash
-./vendor/bin/shadow-auth-publish-demo
-```
-
-This creates a self-contained folder:
-
-- `shadow-auth-demo/composer.json`
-- `shadow-auth-demo/bootstrap.php`
-- `shadow-auth-demo/public/*`
-- `shadow-auth-demo/views/*`
-
-Install demo dependencies inside the published demo folder:
-
-```bash
-cd shadow-auth-demo
-composer install
-```
-
-Note on versions: for `0.0.x` packages, Composer caret ranges like `^0.0.1` are very strict and do not auto-upgrade to `0.0.2`. Use a range like `>=0.0.1 <0.1.0` when you want updates across `0.0.x` tags.
-
-To overwrite existing published files:
-
-```bash
-./vendor/bin/shadow-auth-publish-demo --force
-```
-
-You can also run the Composer script alias:
-
-```bash
-composer publish-demo
-```
-
-To overwrite existing files in that demo folder:
-
-```bash
-composer publish-demo-force
-```
-
-Publish only endpoints (`views/`) into the current project root:
-
-```bash
-composer publish-endpoints
-composer publish-endpoints-force
-```
-
-Publish only demo public assets (`public/`) into the current project root:
-
-```bash
-./vendor/bin/shadow-auth-publish-demo --public
-```
-
-## Publish Commands Summary
-
-- `composer publish-demo` → isolated `shadow-auth-demo/` scaffold
-- `composer publish-demo-force` → overwrite inside `shadow-auth-demo/`
-- `composer publish-endpoints` → copy package `views/` to host `views/`
-- `composer publish-endpoints-force` → overwrite host `views/`
-
-## Version Tagging
-
-Use the built-in release helper to create semantic version tags.
-
-Create a local tag:
-
-```bash
-./bin/shadow-auth-tag-release 0.0.3
-```
-
-Create and push a tag:
-
-```bash
-./bin/shadow-auth-tag-release 0.0.3 --push
-```
-
-Composer shortcuts:
-
-```bash
-composer release-tag -- 0.0.3
-composer release-tag -- 0.0.3 --push
-```
-
-Notes:
-
-- Tags are created as annotated tags: `v<version>`.
-- The script validates SemVer and blocks duplicate local/remote tags.
-
-## Composer Autoload
-
-In the package `composer.json`, map the namespace root:
-
-```json
-{
-    "autoload": {
-        "psr-4": {
-            "Devinci\\ShadowAuth\\": "src/"
-        }
-    }
-}
-```
-
-Then run:
-
-```bash
-composer dump-autoload
-```
-
 ## Quick Start
 
-### 1) Bootstrap
+### 1. Bootstrap
 
 ```php
 <?php
@@ -227,12 +69,11 @@ use DevinciIT\ShadowAuth\Core\Config;
 use DevinciIT\ShadowAuth\Facade\Auth;
 
 Config::set([
-        'storage_path' => __DIR__ . '/storage/shadow.php',
-        'totp_enabled' => true,
+    'storage_path' => __DIR__ . '/storage/shadow.php',
+    'session_key' => 'shadow_auth_user',
+    'totp_enabled' => true,
     'registration_constraints' => [
-        // Enforce uniqueness for any attributes persisted by registration.
         'unique_fields' => ['username', 'email'],
-        // Compare selected fields case-insensitively.
         'case_insensitive_fields' => ['username', 'email'],
     ],
 ]);
@@ -240,12 +81,67 @@ Config::set([
 Auth::boot();
 ```
 
-### Registration Constraints
+### 2. Register
 
-`registration_constraints` lets developers define uniqueness rules without changing processor logic.
+```php
+$ok = Auth::registerWithData('alice', 'secure-password', [
+    'email' => 'alice@example.com',
+]);
+```
+
+### 3. Login
+
+```php
+$result = Auth::beginLogin('alice', 'secure-password');
+
+if ($result === 'authenticated') {
+    // Logged in
+}
+
+if ($result === 'totp_required') {
+    // Show TOTP form and call Auth::verifyPendingTotp($code)
+}
+```
+
+### 4. Route Guard
+
+```php
+Auth::requireAuth('/views/login.php');
+```
+
+## Architecture
+
+Namespace root: `DevinciIT\ShadowAuth\`
+
+Main components:
+
+- `Core`: business logic managers and config.
+- `Facade`: static API for app code.
+- `Providers`: persistence layer (`FileUserProvider`).
+- `Processors`: request handlers for login/register/reset/TOTP forms.
+- `Services`: reusable services (`TwoFactorService`).
+- `Utils`: utility helpers (`CSRF`).
+- `View`: form builders with CSRF injection.
+- `Publisher`: file publishing utilities for demo/endpoints/wiki.
+- `Shadow\Facade\Auth`: compatibility alias facade.
+
+## Configuration
+
+Configure with `DevinciIT\ShadowAuth\Core\Config::set([...])`.
+
+Supported keys:
+
+- `storage_path` (`string`, required): path to PHP array storage file.
+- `session_key` (`string`, optional): auth session key. Default: `shadow_auth_user`.
+- `totp_enabled` (`bool`, optional): global TOTP toggle. Default: `true`.
+- `registration_constraints` (`array`, optional): unique/case-insensitive field rules.
+
+Example:
 
 ```php
 Config::set([
+    'storage_path' => __DIR__ . '/storage/shadow.php',
+    'totp_enabled' => true,
     'registration_constraints' => [
         'unique_fields' => ['username', 'email'],
         'case_insensitive_fields' => ['username', 'email'],
@@ -253,125 +149,111 @@ Config::set([
 ]);
 ```
 
-If a constraint fails, registration now returns a field-specific message like `Email is already in use.`.
+## Auth Flows
 
-### 2) Register User
+### Username/password only
 
-```php
-use DevinciIT\ShadowAuth\Facade\Auth;
+1. `Auth::beginLogin($username, $password)`
+2. Returns `authenticated` and session is established.
 
-$ok = Auth::register('alice', 'secure-password');
+### Username/password + TOTP
+
+1. `Auth::beginLogin(...)`
+2. Returns `totp_required` and writes pending state in session.
+3. `Auth::verifyPendingTotp($code)` finalizes login.
+
+### Password reset
+
+1. `Auth::requestPasswordResetToken($identifier)` returns token (demo mode usage).
+2. Validate before submit with `Auth::hasValidPasswordResetToken($token)`.
+3. Complete with `Auth::resetPasswordWithToken($token, $newPassword)`.
+
+## Facade API
+
+Available methods in `DevinciIT\ShadowAuth\Facade\Auth`:
+
+- `boot(): void`
+- `register(string $username, string $password): bool`
+- `registerWithData(string $username, string $password, array $attributes): bool`
+- `registrationError(): ?string`
+- `attempt(string $username, string $password, ?string $totp = null): bool`
+- `beginLogin(string $username, string $password): string`
+- `verifyPendingTotp(string $code): bool`
+- `isTotpPending(): bool`
+- `pendingUsername(): ?string`
+- `check(): bool`
+- `requireAuth(string $redirectTo = '/views/login.php'): void`
+- `user(): ?array`
+- `logout(): void`
+- `setupTotpSecret(string $username): ?string`
+- `confirmTotp(string $username, string $code): bool`
+- `disableTotp(string $username): bool`
+- `enableTotp(): void`
+- `disableTotpGlobally(): void`
+- `requestPasswordResetToken(string $identifier): ?string`
+- `hasValidPasswordResetToken(string $token): bool`
+- `resetPasswordWithToken(string $token, string $newPassword): bool`
+
+## Publishing Demo, Endpoints, and Wiki
+
+This package includes `bin/shadow-auth-publish-demo` with multiple modes.
+
+```bash
+# Full demo scaffold into ./shadow-auth-demo
+./vendor/bin/shadow-auth-publish-demo
+
+# Overwrite existing files
+./vendor/bin/shadow-auth-publish-demo --force
+
+# Publish only public assets into host project ./public
+./vendor/bin/shadow-auth-publish-demo --public
+
+# Publish only views into host project ./views
+./vendor/bin/shadow-auth-publish-demo --endpoints
+
+# Publish only wiki scaffold into ./shadow-auth-wiki
+./vendor/bin/shadow-auth-publish-demo --wiki
 ```
 
-### 3) Login User (single-call)
+Composer script aliases:
 
-```php
-use DevinciIT\ShadowAuth\Facade\Auth;
-
-$ok = Auth::attempt('alice', 'secure-password');
+```bash
+composer publish-demo
+composer publish-demo-force
+composer publish-endpoints
+composer publish-endpoints-force
 ```
 
-### 4) Login User (processor two-step with required TOTP)
+## Class Wiki
 
-```php
-use DevinciIT\ShadowAuth\Facade\Auth;
+Detailed per-class documentation is under `docs/wiki/`.
 
-$result = Auth::beginLogin('alice', 'secure-password');
-
-if ($result === 'totp_required') {
-    // redirect to setup_2fa.php and validate with verifyPendingTotp()
-}
-```
-
-### 5) Check Session / Logout
-
-```php
-use DevinciIT\ShadowAuth\Facade\Auth;
-
-if (Auth::check()) {
-        $user = Auth::user();
-}
-
-Auth::logout();
-```
-
-## Minimal View Example
-
-```php
-<?php
-require __DIR__ . '/../bootstrap.php';
-
-use DevinciIT\ShadowAuth\Processors\LoginProcessor;
-use DevinciIT\ShadowAuth\View\Forms;
-use DevinciIT\ShadowAuth\Core\Flash;
-
-$processor = new LoginProcessor();
-$processor->handle();
-?>
-
-<form method="post">
-        <?= Forms::renderInputs('login') ?>
-        <button type="submit">Login</button>
-</form>
-
-<p><?= Flash::get() ?></p>
-```
+- Wiki index: `docs/wiki/README.md`
+- Class pages: `docs/wiki/classes/`
 
 ## Security Notes
 
-- Keep `storage/shadow.php` outside the public web root
-- Apply restrictive permissions (recommended `0600`)
-- Always use HTTPS in production
-- Regenerate sessions after successful login
-- Validate CSRF tokens on all state-changing requests
+- Keep storage files outside the public web root where possible.
+- Apply restrictive permissions (`0700` for directory, `0600` for file).
+- Always use HTTPS in production.
+- Regenerate session IDs after successful authentication.
+- Validate CSRF tokens on all state-changing requests.
+- Treat demo password reset tokens as sensitive and short-lived.
 
-## API (Facade)
+## Release and Tagging
 
-Implemented facade methods:
-
-- `Auth::boot()`
-- `Auth::register(string $username, string $password): bool`
-- `Auth::attempt(string $username, string $password, ?string $totp = null): bool`
-- `Auth::beginLogin(string $username, string $password): string` (`authenticated|totp_required|failed`)
-- `Auth::verifyPendingTotp(string $code): bool`
-- `Auth::isTotpPending(): bool`
-- `Auth::pendingUsername(): ?string`
-- `Auth::check(): bool`
-- `Auth::user(): ?array`
-- `Auth::logout(): void`
-- `Auth::enableTotp(): void`
-- `Auth::disableTotpGlobally(): void`
-- `Auth::confirmTotp(string $username, string $code): bool`
-- `Auth::disableTotp(string $username): bool`
-
-## VCS Release Guide (v0.0.1)
-
-Use this when preparing your first public release.
-
-1. Ensure repository is clean and ready:
+Create an annotated tag with helper script:
 
 ```bash
-git status
+./bin/shadow-auth-tag-release 0.0.3
+./bin/shadow-auth-tag-release 0.0.3 --push
 ```
 
-2. Commit changes:
+Composer aliases:
 
 ```bash
-git add .
-git commit -m "release: prepare v0.0.1"
-```
-
-3. Tag release:
-
-```bash
-git tag v0.0.1
-```
-
-4. Push branch and tags:
-
-```bash
-git push origin main
-git push origin v0.0.1
+composer release-tag -- 0.0.3
+composer release-tag-push -- 0.0.3
 ```
 
 ## License

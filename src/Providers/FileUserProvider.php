@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\Providers;
 
+/**
+ * Persists users in a PHP file returning an array of user records.
+ */
 final class FileUserProvider
 {
     public function __construct(private readonly string $storagePath)
     {
     }
 
+    /**
+     * Ensures storage directory and file exist with restrictive permissions.
+     */
     public function initialize(): void
     {
         $directory = dirname($this->storagePath);
@@ -37,6 +43,9 @@ final class FileUserProvider
         return is_array($data) ? $data : [];
     }
 
+    /**
+     * Finds a user by exact username match.
+     */
     public function findByUsername(string $username): ?array
     {
         $users = $this->all();

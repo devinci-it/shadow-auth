@@ -8,6 +8,9 @@ use DevinciIT\ShadowAuth\Core\Flash;
 use DevinciIT\ShadowAuth\Facade\Auth;
 use DevinciIT\ShadowAuth\Utils\CSRF;
 
+/**
+ * Handles second-factor verification during pending login state.
+ */
 final class TOTPProcessor extends BaseProcessor
 {
     public function __construct(

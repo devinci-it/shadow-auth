@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\View;
 
+/**
+ * Field schema for reset-password token and password input.
+ */
 final class ResetPasswordForm extends BaseForm
 {
     protected array $requiredFields = [

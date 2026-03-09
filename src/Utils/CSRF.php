@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\Utils;
 
+/**
+ * CSRF token helper backed by the active PHP session.
+ */
 final class CSRF
 {
     private const SESSION_KEY = '_shadow_csrf';
 
+    /**
+     * Returns the current session token, creating it when missing.
+     */
     public static function token(): string
     {
         self::ensureSession();
@@ -26,6 +32,9 @@ final class CSRF
         return '<input type="hidden" name="csrf_token" value="' . $token . '">';
     }
 
+    /**
+     * Validates a submitted token against the session token.
+     */
     public static function validate(?string $token): bool
     {
         self::ensureSession();

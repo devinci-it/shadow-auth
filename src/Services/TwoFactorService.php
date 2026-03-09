@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\Services;
 
+/**
+ * Generates and verifies TOTP secrets and one-time codes.
+ */
 final class TwoFactorService
 {
     public function generateSecret(int $length = 32): string
@@ -18,6 +21,9 @@ final class TwoFactorService
         return $secret;
     }
 
+    /**
+     * Verifies a 6-digit TOTP code against the current +/- window.
+     */
     public function verifyCode(string $secret, string $code, int $window = 1): bool
     {
         $normalized = preg_replace('/\s+/', '', $code) ?? '';

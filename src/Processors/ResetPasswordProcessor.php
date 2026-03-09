@@ -8,6 +8,9 @@ use DevinciIT\ShadowAuth\Core\Flash;
 use DevinciIT\ShadowAuth\Facade\Auth;
 use DevinciIT\ShadowAuth\Utils\CSRF;
 
+/**
+ * Handles reset password form submission for token-based password changes.
+ */
 final class ResetPasswordProcessor extends BaseProcessor
 {
     public function __construct(private readonly string $loginRedirect)

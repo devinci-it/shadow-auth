@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\Processors;
 
+/**
+ * Common processor utilities for request-method checks and redirects.
+ */
 abstract class BaseProcessor
 {
     abstract public function handle(): void;

@@ -7,6 +7,9 @@ namespace DevinciIT\ShadowAuth\Core;
 use DevinciIT\ShadowAuth\Providers\FileUserProvider;
 use DevinciIT\ShadowAuth\Services\TwoFactorService;
 
+/**
+ * Coordinates authentication, registration, password reset, and TOTP workflows.
+ */
 final class AuthManager
 {
     private string $pendingSessionKey;
@@ -21,6 +24,9 @@ final class AuthManager
         $this->pendingSessionKey = $this->sessionKey . '_pending_totp';
     }
 
+    /**
+     * Registers a user with username and password only.
+     */
     public function register(string $username, string $password): bool
     {
         return $this->registrationManager->register($username, $password);
@@ -105,6 +111,9 @@ final class AuthManager
         return 'authenticated';
     }
 
+    /**
+     * Completes pending login by validating a TOTP code.
+     */
     public function verifyPendingTotp(string $code): bool
     {
         $this->ensureSession();
@@ -174,6 +183,9 @@ final class AuthManager
         unset($_SESSION[$this->pendingSessionKey]);
     }
 
+    /**
+     * Generates and stores a TOTP secret for the provided user.
+     */
     public function setupTotpSecret(string $username): ?string
     {
         $user = $this->provider->findByUsername($username);
@@ -213,6 +225,9 @@ final class AuthManager
         ]);
     }
 
+    /**
+     * Ensures the PHP session is started before touching session state.
+     */
     private function ensureSession(): void
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {

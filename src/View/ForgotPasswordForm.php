@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\View;
 
+/**
+ * Field schema for forgot password submissions.
+ */
 final class ForgotPasswordForm extends BaseForm
 {
     protected array $requiredFields = [

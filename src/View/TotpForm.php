@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DevinciIT\ShadowAuth\View;
 
+/**
+ * Field schema for one-time passcode verification.
+ */
 final class TotpForm extends BaseForm
 {
     protected array $requiredFields = [

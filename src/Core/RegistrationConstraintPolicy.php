@@ -6,6 +6,9 @@ namespace DevinciIT\ShadowAuth\Core;
 
 use DevinciIT\ShadowAuth\Providers\FileUserProvider;
 
+/**
+ * Evaluates registration uniqueness constraints against persisted users.
+ */
 final class RegistrationConstraintPolicy
 {
     private array $uniqueFields;
@@ -19,6 +22,9 @@ final class RegistrationConstraintPolicy
         $this->caseInsensitiveFields = $this->normalizeFields($constraints['case_insensitive_fields'] ?? ['username', 'email']);
     }
 
+    /**
+     * Returns a user-friendly violation message or null when all checks pass.
+     */
     public function violationMessageFor(array $attributes): ?string
     {
         foreach ($this->uniqueFields as $field) {

@@ -8,6 +8,9 @@ use DevinciIT\ShadowAuth\Core\Flash;
 use DevinciIT\ShadowAuth\Facade\Auth;
 use DevinciIT\ShadowAuth\Utils\CSRF;
 
+/**
+ * Handles registration submission, validation, and optional extra fields.
+ */
 final class RegisterProcessor extends BaseProcessor
 {
     public function __construct(

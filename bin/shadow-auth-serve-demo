@@ -312,7 +312,7 @@ function copyDirectoryRecursive(string $source, string $destination): void
     }
 }
 
-function writeDemoComposerJson(string $templatePath, string $targetPath, string $packageRoot): void
+function writeDemoComposerJson(string $templatePath, string $targetPath): void
 {
     $raw = file_get_contents($templatePath);
     if ($raw === false) {
@@ -328,19 +328,17 @@ function writeDemoComposerJson(string $templatePath, string $targetPath, string 
         $decoded['require'] = [];
     }
 
-    $decoded['require']['devinci-it/shadow-auth'] = '*';
+    unset($decoded['require']['devinci-it/shadow-auth']);
 
-    $pathRepo = [
-        'type' => 'path',
-        'url' => $packageRoot,
-        'options' => [
-            'symlink' => true,
+    // Keep demo isolated by autoloading the copied local source tree.
+    $decoded['autoload'] = [
+        'psr-4' => [
+            'DevinciIT\\ShadowAuth\\' => 'src/',
+            'Shadow\\' => 'src/Shadow/',
         ],
     ];
 
-    $repositories = isset($decoded['repositories']) && is_array($decoded['repositories']) ? $decoded['repositories'] : [];
-    array_unshift($repositories, $pathRepo);
-    $decoded['repositories'] = $repositories;
+    unset($decoded['repositories']);
 
     $encoded = json_encode($decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     if ($encoded === false) {
@@ -405,12 +403,14 @@ try {
     }
 
     $bootstrapPath = $packageRoot . '/bootstrap.php';
+    $srcPath = $packageRoot . '/src';
     $publicPath = $packageRoot . '/public';
     $viewsPath = $packageRoot . '/views';
     $templateComposerPath = $packageRoot . '/assets/templates/demo.composer.json';
     $storageIgnorePath = $packageRoot . '/storage/.gitignore';
 
     requirePathExists($bootstrapPath, 'bootstrap.php');
+    requirePathExists($srcPath, 'src directory');
     requirePathExists($publicPath, 'public directory');
     requirePathExists($viewsPath, 'views directory');
     requirePathExists($templateComposerPath, 'demo composer template');
@@ -424,6 +424,7 @@ try {
 
     out('Preparing demo files...');
     copyFileStrict($bootstrapPath, $targetRoot . '/bootstrap.php');
+    copyDirectoryRecursive($srcPath, $targetRoot . '/src');
     copyDirectoryRecursive($publicPath, $targetRoot . '/public');
     copyDirectoryRecursive($viewsPath, $targetRoot . '/views');
 
@@ -433,7 +434,7 @@ try {
         writeFileStrict($targetRoot . '/storage/.gitignore', "*\n!.gitignore\n");
     }
 
-    writeDemoComposerJson($templateComposerPath, $targetRoot . '/composer.json', $packageRoot);
+    writeDemoComposerJson($templateComposerPath, $targetRoot . '/composer.json');
 
     if (!$options['no_install']) {
         out('Installing demo dependencies with Composer...');

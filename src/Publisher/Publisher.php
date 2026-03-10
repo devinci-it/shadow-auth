@@ -51,9 +51,11 @@ final class Publisher
 
         $map = [
             $packageRoot . '/bootstrap.php' => $targetRoot . '/bootstrap.php',
+            $packageRoot . '/src' => $targetRoot . '/src',
             $packageRoot . '/public' => $targetRoot . '/public',
             $packageRoot . '/views' => $targetRoot . '/views',
             $packageRoot . '/assets/templates/demo.composer.json' => $targetRoot . '/composer.json',
+            $packageRoot . '/storage/.gitignore' => $targetRoot . '/storage/.gitignore',
         ];
 
         $copied = [];

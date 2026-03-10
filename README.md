@@ -236,9 +236,9 @@ Use the dedicated helper to create an isolated demo in `/tmp`, generate a proper
 Default behavior:
 
 - Creates target directory under `/tmp/shadow-auth-demo-*`
-- Copies `bootstrap.php`, `public/`, and `views/`
-- Writes `composer.json` from the demo template and points dependency to local path repo
-- Runs `composer install`
+- Copies `bootstrap.php`, `src/`, `public/`, and `views/`
+- Writes `composer.json` from the demo template with local PSR-4 autoload
+- Runs `composer install` (no `devinci-it/shadow-auth` self-dependency required)
 - Serves `http://127.0.0.1:8500` with `php -S 127.0.0.1:8500 -t public`
 
 Useful flags:

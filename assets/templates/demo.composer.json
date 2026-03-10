@@ -3,15 +3,14 @@
     "description": "Isolated demo scaffold for devinci-it/shadow-auth",
     "type": "project",
     "require": {
-        "php": ">=8.1",
-        "devinci-it/shadow-auth": ">=0.0.1 <0.1.0"
+        "php": ">=8.1"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/devinci-it/shadow-auth"
+    "autoload": {
+        "psr-4": {
+            "DevinciIT\\ShadowAuth\\": "src/",
+            "Shadow\\": "src/Shadow/"
         }
-    ],
+    },
     "minimum-stability": "stable",
     "prefer-stable": true
 }
